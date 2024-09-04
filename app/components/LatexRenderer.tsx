@@ -248,7 +248,7 @@ function LatexRenderer() {
           },
         ],
       });
-      return response.choices[0].message.content + '\n\\\\\n' || '';
+      return response.choices[0].message.content + '\n\n' || '';
     } catch (error) {
       console.error('Error calling GPT-4 Vision API:', error);
       return 'Error converting image to LaTeX';
@@ -372,7 +372,7 @@ function LatexRenderer() {
           position: 'relative',
         }}>
           {text ? (
-            <Latex>{'$$' + text + '$$'}</Latex>
+            <Latex>{'$$' + text.replace(/\n/g, '\\\\') + '$$'}</Latex>
           ) : (
             <div style={{
               position: 'absolute',
