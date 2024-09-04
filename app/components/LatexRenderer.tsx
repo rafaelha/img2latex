@@ -43,9 +43,16 @@ function LatexRenderer() {
         const newAspectRatio = img.width / img.height;
         setAspectRatio(newAspectRatio);
         // Adjust preview size to match the new aspect ratio
-        setPreviewSize(prevSize => {
-          const newHeight = prevSize.width / newAspectRatio;
-          return { width: prevSize.width, height: newHeight };
+        const newWidth = 200; // You can adjust this default width
+        const newHeight = newWidth / newAspectRatio;
+        setPreviewSize({ width: newWidth, height: newHeight });
+
+        // Set position to bottom right corner
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        setPreviewPosition({
+          x: windowWidth - newWidth - 20, // 20px padding from right edge
+          y: windowHeight - newHeight - 20 // 20px padding from bottom edge
         });
       };
       img.src = base64Image;
