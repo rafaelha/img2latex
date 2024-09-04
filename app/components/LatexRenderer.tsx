@@ -14,22 +14,28 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-const initialText = '%Drag and drop an image here to convert it to LaTeX\n';
+const initialText = 'Drag and drop an image here to convert it to LaTeX!';
 
 function LatexRenderer() {
-  const [text, setText] = useState(initialText);
+  const [text, setText] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const processImage = useCallback(async (imageFile: File) => {
-    const base64Image = await convertToBase64(imageFile);
-    const latexCode = await getLatexFromImage(base64Image);
-    setText(prevText => {
-      if (prevText.trim() === initialText.trim()) {
-        return latexCode;
-      }
-      return prevText + '\n' + latexCode;
-    });
+    setIsProcessing(true);
+    try {
+      const base64Image = await convertToBase64(imageFile);
+      const latexCode = await getLatexFromImage(base64Image);
+      setText(prevText => {
+        if (prevText.trim() === initialText.trim()) {
+          return latexCode;
+        }
+        return prevText + '\n' + latexCode;
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   }, []);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -62,6 +68,7 @@ function LatexRenderer() {
   }, [text]);
 
   const handlePasteButton = useCallback(async () => {
+    setIsProcessing(true);
     try {
       setIsLoading(true);
       const items = await navigator.clipboard.read();
@@ -93,7 +100,7 @@ function LatexRenderer() {
         console.error('Clipboard read failed: ', err);
       });
     } finally {
-      setIsLoading(false);
+      setIsProcessing(false);
     }
   }, [processImage]);
 
@@ -176,7 +183,7 @@ function LatexRenderer() {
         alignItems: 'center', 
         marginBottom: '20px' 
       }}>
-        <h1>LaTeX Editor</h1>
+        <h1></h1>
         <div style={{
           display: 'flex',
           gap: '10px',
@@ -195,16 +202,16 @@ function LatexRenderer() {
           </button>
           <button
             onClick={handlePasteButton}
-            disabled={isLoading}
+            disabled={isProcessing}
             style={{
               background: 'none',
               border: 'none',
-              cursor: 'pointer',
+              cursor: isProcessing ? 'wait' : 'pointer',
               color: '#ffffff',
               fontSize: '20px',
             }}
           >
-            {isLoading ? <AiOutlineLoading3Quarters className="animate-spin" /> : <FiClipboard />}
+            {isProcessing ? <AiOutlineLoading3Quarters className="animate-spin" /> : <FiClipboard />}
           </button>
         </div>
       </div>
@@ -238,8 +245,28 @@ function LatexRenderer() {
           padding: '20px',
           overflowY: 'auto',
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          position: 'relative',
         }}>
-          <Latex>{'$$' + text + '$$'}</Latex>
+          {text ? (
+            <Latex>{'$$' + text + '$$'}</Latex>
+          ) : (
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              color: '#666',
+              padding: '20px',
+              whiteSpace: 'pre-wrap', // Add this line
+            }}>
+              {initialText}
+            </div>
+          )}
         </div>
       </div>
     </div>
