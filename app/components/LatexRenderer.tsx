@@ -8,7 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import OpenAI from 'openai';
 import { FiCopy, FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { IoMdClose, IoMdResize } from 'react-icons/io'; // Add this import for the resize icon
+import { IoMdClose, IoMdResize } from 'react-icons/io';
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -25,16 +25,31 @@ function LatexRenderer() {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [previewPosition, setPreviewPosition] = useState({ x: 20, y: 20 });
   const [previewSize, setPreviewSize] = useState({ width: 200, height: 200 });
+  const [aspectRatio, setAspectRatio] = useState(1);
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
   const isResizingRef = useRef(false);
-  const resizeStartRef = useRef({ x: 0, y: 0, width: 0, height: 0 });
+  const resizeStartRef = useRef({ x: 0, y: 0, width: 0, height: 0, left: 0, top: 0, direction: '' });
 
   const processImage = useCallback(async (imageFile: File) => {
     setIsProcessing(true);
     try {
       const base64Image = await convertToBase64(imageFile);
-      setPreviewImage(base64Image); // Set the preview image
+      setPreviewImage(base64Image);
+      
+      // Set aspect ratio based on the new image
+      const img = new Image();
+      img.onload = () => {
+        const newAspectRatio = img.width / img.height;
+        setAspectRatio(newAspectRatio);
+        // Adjust preview size to match the new aspect ratio
+        setPreviewSize(prevSize => {
+          const newHeight = prevSize.width / newAspectRatio;
+          return { width: prevSize.width, height: newHeight };
+        });
+      };
+      img.src = base64Image;
+
       const latexCode = await getLatexFromImage(base64Image);
       setText(prevText => {
         if (prevText.trim() === initialText.trim()) {
@@ -137,14 +152,17 @@ function LatexRenderer() {
     isDraggingRef.current = false;
   }, []);
 
-  const handleResizeStart = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent dragging when starting resize
+  const handleResizeStart = (e: React.MouseEvent, direction: string) => {
+    e.stopPropagation();
     isResizingRef.current = true;
     resizeStartRef.current = {
       x: e.clientX,
       y: e.clientY,
       width: previewSize.width,
-      height: previewSize.height
+      height: previewSize.height,
+      left: previewPosition.x,
+      top: previewPosition.y,
+      direction: direction
     };
   };
 
@@ -152,12 +170,35 @@ function LatexRenderer() {
     if (isResizingRef.current) {
       const deltaX = e.clientX - resizeStartRef.current.x;
       const deltaY = e.clientY - resizeStartRef.current.y;
-      setPreviewSize({
-        width: Math.max(100, resizeStartRef.current.width + deltaX),
-        height: Math.max(100, resizeStartRef.current.height + deltaY)
-      });
+      const direction = resizeStartRef.current.direction;
+      
+      let newWidth = resizeStartRef.current.width;
+      let newHeight = resizeStartRef.current.height;
+      let newLeft = resizeStartRef.current.left;
+      let newTop = resizeStartRef.current.top;
+
+      if (direction.includes('e')) {
+        newWidth = Math.max(100, resizeStartRef.current.width + deltaX);
+        newHeight = newWidth / aspectRatio;
+      } else if (direction.includes('w')) {
+        newWidth = Math.max(100, resizeStartRef.current.width - deltaX);
+        newHeight = newWidth / aspectRatio;
+        newLeft = resizeStartRef.current.left + (resizeStartRef.current.width - newWidth);
+      }
+
+      if (direction.includes('s')) {
+        newHeight = Math.max(100, resizeStartRef.current.height + deltaY);
+        newWidth = newHeight * aspectRatio;
+      } else if (direction.includes('n')) {
+        newHeight = Math.max(100, resizeStartRef.current.height - deltaY);
+        newWidth = newHeight * aspectRatio;
+        newTop = resizeStartRef.current.top + (resizeStartRef.current.height - newHeight);
+      }
+
+      setPreviewSize({ width: newWidth, height: newHeight });
+      setPreviewPosition({ x: newLeft, y: newTop });
     }
-  }, []);
+  }, [aspectRatio]);
 
   const handleResizeEnd = useCallback(() => {
     isResizingRef.current = false;
@@ -362,7 +403,7 @@ function LatexRenderer() {
             height: `${previewSize.height}px`,
             backgroundColor: '#2d2d2d',
             borderRadius: '8px',
-            overflow: 'hidden',
+            overflow: 'visible',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 0 10px rgba(255, 255, 255, 0.5)',
             zIndex: 1000,
             cursor: 'move',
@@ -396,28 +437,28 @@ function LatexRenderer() {
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'contain',
+              objectFit: 'cover',
               pointerEvents: 'none',
             }}
           />
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '5px',
-              right: '5px',
-              width: '20px',
-              height: '20px',
-              cursor: 'se-resize',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#ffffff',
-              fontSize: '16px',
-            }}
-            onMouseDown={handleResizeStart}
-          >
-            <IoMdResize />
-          </div>
+          {['nw', 'ne', 'sw', 'se'].map((direction) => (
+            <div
+              key={direction}
+              style={{
+                position: 'absolute',
+                width: '8px',
+                height: '30px',
+                background: 'transparent',
+                [direction[0]]: direction[0] === 'n' ? '0' : 'auto',
+                [direction[1]]: direction[1] === 'w' ? '0' : 'auto',
+                [direction[0] === 'n' ? 'top' : 'bottom']: '0',
+                [direction[1] === 'w' ? 'left' : 'right']: '0',
+                cursor: `${direction}-resize`,
+                zIndex: 1001,
+              }}
+              onMouseDown={(e) => handleResizeStart(e, direction)}
+            />
+          ))}
         </div>
       )}
     </div>
