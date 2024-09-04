@@ -6,6 +6,8 @@ import 'katex/dist/katex.min.css';
 import Editor from '@monaco-editor/react';
 import { useDropzone } from 'react-dropzone';
 import OpenAI from 'openai';
+import { FiCopy, FiCheck, FiClipboard } from 'react-icons/fi';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -16,6 +18,8 @@ const initialText = '%Drag and drop an image here to convert it to LaTeX\n';
 
 function LatexRenderer() {
   const [text, setText] = useState(initialText);
+  const [isCopied, setIsCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const processImage = useCallback(async (imageFile: File) => {
     const base64Image = await convertToBase64(imageFile);
@@ -48,6 +52,48 @@ function LatexRenderer() {
           }
         }
       }
+    }
+  }, [processImage]);
+
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  }, [text]);
+
+  const handlePasteButton = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        if (item.types.includes('image/png') || item.types.includes('image/jpeg')) {
+          const blob = await item.getType(item.types.includes('image/png') ? 'image/png' : 'image/jpeg');
+          await processImage(new File([blob], 'pasted-image', { type: blob.type }));
+          break;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to read clipboard contents: ', error);
+      // Fallback to legacy clipboard API
+      navigator.clipboard.readText().then(text => {
+        if (text.startsWith('data:image')) {
+          const arr = text.split(',');
+          const mimeMatch = arr[0].match(/:(.*?);/);
+          const mime = mimeMatch ? mimeMatch[1] : 'image/png'; // Default to 'image/png' if match fails
+          const bstr = atob(arr[1]);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          const file = new File([u8arr], 'pasted-image', { type: mime });
+          processImage(file);
+        }
+      }).catch(err => {
+        console.error('Clipboard read failed: ', err);
+      });
+    } finally {
+      setIsLoading(false);
     }
   }, [processImage]);
 
@@ -124,28 +170,67 @@ function LatexRenderer() {
           <p>Drop the image here ...</p>
         </div>
       )}
-      <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>LaTeX Editor</h1>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '20px' 
+      }}>
+        <h1>LaTeX Editor</h1>
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+        }}>
+          <button
+            onClick={handleCopy}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#ffffff',
+              fontSize: '20px',
+            }}
+          >
+            {isCopied ? <FiCheck /> : <FiCopy />}
+          </button>
+          <button
+            onClick={handlePasteButton}
+            disabled={isLoading}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#ffffff',
+              fontSize: '20px',
+            }}
+          >
+            {isLoading ? <AiOutlineLoading3Quarters className="animate-spin" /> : <FiClipboard />}
+          </button>
+        </div>
+      </div>
       <div style={{ display: 'flex', flex: 1, gap: '20px' }}>
-        <Editor
-          height="100%"
-          width="50%"
-          language="latex"
-          theme="vs-dark"
-          value={text}
-          onChange={(value) => setText(value || '')}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 16,
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            wordWrap: 'on',
-            scrollbar: {
-              vertical: 'hidden',
-              horizontal: 'hidden',
-            },
-            overviewRulerBorder: false,
-          }}
-        />
+        <div style={{ position: 'relative', width: '50%' }}>
+          <Editor
+            height="100%"
+            width="100%"
+            language="latex"
+            theme="vs-dark"
+            value={text}
+            onChange={(value) => setText(value || '')}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 16,
+              lineNumbers: 'on',
+              scrollBeyondLastLine: false,
+              wordWrap: 'on',
+              scrollbar: {
+                vertical: 'hidden',
+                horizontal: 'hidden',
+              },
+              overviewRulerBorder: false,
+            }}
+          />
+        </div>
         <div style={{
           width: '50%',
           backgroundColor: '#2d2d2d',
