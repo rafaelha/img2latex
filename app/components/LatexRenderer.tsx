@@ -8,7 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import OpenAI from 'openai';
 import { FiCopy, FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { IoMdClose } from 'react-icons/io'; // Add this import for the close icon
+import { IoMdClose, IoMdResize } from 'react-icons/io'; // Add this import for the resize icon
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -24,8 +24,11 @@ function LatexRenderer() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [previewPosition, setPreviewPosition] = useState({ x: 20, y: 20 });
+  const [previewSize, setPreviewSize] = useState({ width: 200, height: 200 });
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
+  const isResizingRef = useRef(false);
+  const resizeStartRef = useRef({ x: 0, y: 0, width: 0, height: 0 });
 
   const processImage = useCallback(async (imageFile: File) => {
     setIsProcessing(true);
@@ -134,16 +137,46 @@ function LatexRenderer() {
     isDraggingRef.current = false;
   }, []);
 
+  const handleResizeStart = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent dragging when starting resize
+    isResizingRef.current = true;
+    resizeStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      width: previewSize.width,
+      height: previewSize.height
+    };
+  };
+
+  const handleResize = useCallback((e: MouseEvent) => {
+    if (isResizingRef.current) {
+      const deltaX = e.clientX - resizeStartRef.current.x;
+      const deltaY = e.clientY - resizeStartRef.current.y;
+      setPreviewSize({
+        width: Math.max(100, resizeStartRef.current.width + deltaX),
+        height: Math.max(100, resizeStartRef.current.height + deltaY)
+      });
+    }
+  }, []);
+
+  const handleResizeEnd = useCallback(() => {
+    isResizingRef.current = false;
+  }, []);
+
   useEffect(() => {
     document.addEventListener('paste', handlePaste);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mousemove', handleResize);
+    document.addEventListener('mouseup', handleResizeEnd);
     return () => {
       document.removeEventListener('paste', handlePaste);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mousemove', handleResize);
+      document.removeEventListener('mouseup', handleResizeEnd);
     };
-  }, [handlePaste, handleMouseMove, handleMouseUp]);
+  }, [handlePaste, handleMouseMove, handleMouseUp, handleResize, handleResizeEnd]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
     onDrop,
@@ -312,7 +345,7 @@ function LatexRenderer() {
               textAlign: 'center',
               color: '#666',
               padding: '20px',
-              whiteSpace: 'pre-wrap', // Add this line
+              whiteSpace: 'pre-wrap',
             }}>
               {initialText}
             </div>
@@ -325,8 +358,8 @@ function LatexRenderer() {
             position: 'fixed',
             top: `${previewPosition.y}px`,
             left: `${previewPosition.x}px`,
-            maxWidth: '200px',
-            maxHeight: '200px',
+            width: `${previewSize.width}px`,
+            height: `${previewSize.height}px`,
             backgroundColor: '#2d2d2d',
             borderRadius: '8px',
             overflow: 'hidden',
@@ -364,9 +397,27 @@ function LatexRenderer() {
               width: '100%',
               height: '100%',
               objectFit: 'contain',
-              pointerEvents: 'none', // Prevents image from interfering with drag
+              pointerEvents: 'none',
             }}
           />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '5px',
+              right: '5px',
+              width: '20px',
+              height: '20px',
+              cursor: 'se-resize',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              fontSize: '16px',
+            }}
+            onMouseDown={handleResizeStart}
+          >
+            <IoMdResize />
+          </div>
         </div>
       )}
     </div>
