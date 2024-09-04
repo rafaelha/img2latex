@@ -403,7 +403,7 @@ function LatexRenderer() {
             height: `${previewSize.height}px`,
             backgroundColor: '#2d2d2d',
             borderRadius: '8px',
-            overflow: 'visible',
+            overflow: 'hidden',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 0 10px rgba(255, 255, 255, 0.5)',
             zIndex: 1000,
             cursor: 'move',
@@ -427,6 +427,7 @@ function LatexRenderer() {
               cursor: 'pointer',
               color: '#ffffff',
               fontSize: '16px',
+              zIndex: 1002,
             }}
           >
             <IoMdClose />
@@ -439,6 +440,7 @@ function LatexRenderer() {
               height: '100%',
               objectFit: 'cover',
               pointerEvents: 'none',
+              borderRadius: '8px',
             }}
           />
           {['nw', 'ne', 'sw', 'se'].map((direction) => (
@@ -446,13 +448,13 @@ function LatexRenderer() {
               key={direction}
               style={{
                 position: 'absolute',
-                width: '8px',
+                width: '30px',
                 height: '30px',
                 background: 'transparent',
-                [direction[0]]: direction[0] === 'n' ? '0' : 'auto',
-                [direction[1]]: direction[1] === 'w' ? '0' : 'auto',
-                [direction[0] === 'n' ? 'top' : 'bottom']: '0',
-                [direction[1] === 'w' ? 'left' : 'right']: '0',
+                [direction[0]]: direction[0] === 'n' ? '-15px' : 'auto',
+                [direction[1]]: direction[1] === 'w' ? '-15px' : 'auto',
+                [direction[0] === 'n' ? 'top' : 'bottom']: '-15px',
+                [direction[1] === 'w' ? 'left' : 'right']: '-15px',
                 cursor: `${direction}-resize`,
                 zIndex: 1001,
               }}
