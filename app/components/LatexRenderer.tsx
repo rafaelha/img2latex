@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Latex from 'react-latex-next';
 import 'katex/dist/katex.min.css';
 import Editor, { BeforeMount } from '@monaco-editor/react';
@@ -8,6 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import OpenAI from 'openai';
 import { FiCopy, FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { IoMdClose } from 'react-icons/io'; // Add this import for the close icon
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -21,11 +22,16 @@ function LatexRenderer() {
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewPosition, setPreviewPosition] = useState({ x: 20, y: 20 });
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
 
   const processImage = useCallback(async (imageFile: File) => {
     setIsProcessing(true);
     try {
       const base64Image = await convertToBase64(imageFile);
+      setPreviewImage(base64Image); // Set the preview image
       const latexCode = await getLatexFromImage(base64Image);
       setText(prevText => {
         if (prevText.trim() === initialText.trim()) {
@@ -104,12 +110,40 @@ function LatexRenderer() {
     }
   }, [processImage]);
 
+  const closePreview = () => {
+    setPreviewImage(null);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDraggingRef.current = true;
+    dragStartRef.current = {
+      x: e.clientX - previewPosition.x,
+      y: e.clientY - previewPosition.y
+    };
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isDraggingRef.current) {
+      const newX = e.clientX - dragStartRef.current.x;
+      const newY = e.clientY - dragStartRef.current.y;
+      setPreviewPosition({ x: newX, y: newY });
+    }
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    isDraggingRef.current = false;
+  }, []);
+
   useEffect(() => {
     document.addEventListener('paste', handlePaste);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
     return () => {
       document.removeEventListener('paste', handlePaste);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [handlePaste]);
+  }, [handlePaste, handleMouseMove, handleMouseUp]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
     onDrop,
@@ -285,6 +319,56 @@ function LatexRenderer() {
           )}
         </div>
       </div>
+      {previewImage && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: `${previewPosition.y}px`,
+            left: `${previewPosition.x}px`,
+            maxWidth: '200px',
+            maxHeight: '200px',
+            backgroundColor: '#2d2d2d',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 0 10px rgba(255, 255, 255, 0.5)',
+            zIndex: 1000,
+            cursor: 'move',
+          }}
+          onMouseDown={handleMouseDown}
+        >
+          <button
+            onClick={closePreview}
+            style={{
+              position: 'absolute',
+              top: '5px',
+              right: '5px',
+              background: 'rgba(0, 0, 0, 0.5)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#ffffff',
+              fontSize: '16px',
+            }}
+          >
+            <IoMdClose />
+          </button>
+          <img
+            src={previewImage}
+            alt="Pasted or dropped image"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              pointerEvents: 'none', // Prevents image from interfering with drag
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
