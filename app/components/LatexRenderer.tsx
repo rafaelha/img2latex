@@ -37,17 +37,31 @@ function LatexRenderer() {
       const base64Image = await convertToBase64(imageFile);
       setPreviewImage(base64Image);
       
-      // Set aspect ratio based on the new image
+      // Set aspect ratio and size based on the new image
       const img = new Image();
       img.onload = () => {
         const newAspectRatio = img.width / img.height;
         setAspectRatio(newAspectRatio);
-        // Adjust preview size to match the new aspect ratio
-        const newWidth = 200; // You can adjust this default width
-        const newHeight = newWidth / newAspectRatio;
+
+        // Set the preview size to match the image dimensions
+        let newWidth = img.width;
+        let newHeight = img.height;
+
+        // Adjust size if it exceeds the viewport
+        const maxWidth = window.innerWidth * 0.8; // 80% of viewport width
+        const maxHeight = window.innerHeight * 0.8; // 80% of viewport height
+        if (newWidth > maxWidth) {
+          newWidth = maxWidth;
+          newHeight = newWidth / newAspectRatio;
+        }
+        if (newHeight > maxHeight) {
+          newHeight = maxHeight;
+          newWidth = newHeight * newAspectRatio;
+        }
+
         setPreviewSize({ width: newWidth, height: newHeight });
 
-        // Set position to bottom right corner
+        // Position the preview in the bottom right corner
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
         setPreviewPosition({
@@ -140,15 +154,17 @@ function LatexRenderer() {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    isDraggingRef.current = true;
-    dragStartRef.current = {
-      x: e.clientX - previewPosition.x,
-      y: e.clientY - previewPosition.y
-    };
+    if (!isResizingRef.current) {
+      isDraggingRef.current = true;
+      dragStartRef.current = {
+        x: e.clientX - previewPosition.x,
+        y: e.clientY - previewPosition.y
+      };
+    }
   };
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isDraggingRef.current) {
+    if (isDraggingRef.current && !isResizingRef.current) {
       const newX = e.clientX - dragStartRef.current.x;
       const newY = e.clientY - dragStartRef.current.y;
       setPreviewPosition({ x: newX, y: newY });
@@ -157,11 +173,13 @@ function LatexRenderer() {
 
   const handleMouseUp = useCallback(() => {
     isDraggingRef.current = false;
+    isResizingRef.current = false;
   }, []);
 
   const handleResizeStart = (e: React.MouseEvent, direction: string) => {
     e.stopPropagation();
     isResizingRef.current = true;
+    isDraggingRef.current = false;
     resizeStartRef.current = {
       x: e.clientX,
       y: e.clientY,
@@ -207,24 +225,18 @@ function LatexRenderer() {
     }
   }, [aspectRatio]);
 
-  const handleResizeEnd = useCallback(() => {
-    isResizingRef.current = false;
-  }, []);
-
   useEffect(() => {
     document.addEventListener('paste', handlePaste);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('mousemove', handleResize);
-    document.addEventListener('mouseup', handleResizeEnd);
     return () => {
       document.removeEventListener('paste', handlePaste);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mousemove', handleResize);
-      document.removeEventListener('mouseup', handleResizeEnd);
     };
-  }, [handlePaste, handleMouseMove, handleMouseUp, handleResize, handleResizeEnd]);
+  }, [handlePaste, handleMouseMove, handleMouseUp, handleResize]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
     onDrop,
