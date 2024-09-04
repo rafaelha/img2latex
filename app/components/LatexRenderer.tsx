@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Latex from 'react-latex-next';
 import 'katex/dist/katex.min.css';
-import Editor from '@monaco-editor/react';
+import Editor, { BeforeMount } from '@monaco-editor/react';
 import { useDropzone } from 'react-dropzone';
 import OpenAI from 'openai';
 import { FiCopy, FiCheck, FiClipboard } from 'react-icons/fi';
@@ -147,6 +147,21 @@ function LatexRenderer() {
     }
   };
 
+  const handleEditorWillMount: BeforeMount = (monaco) => {
+    monaco.languages.register({ id: 'latex' });
+    monaco.languages.setMonarchTokensProvider('latex', {
+      // Basic LaTeX syntax highlighting rules
+      tokenizer: {
+        root: [
+          [/\\[a-zA-Z]+/, 'keyword'],
+          [/\{|\}|\[|\]/, 'delimiter.bracket'],
+          [/\$\$?/, 'delimiter.latex'],
+          [/%.*$/, 'comment'],
+        ]
+      }
+    });
+  };
+
   return (
     <div
       {...getRootProps()}
@@ -224,6 +239,7 @@ function LatexRenderer() {
             theme="vs-dark"
             value={text}
             onChange={(value) => setText(value || '')}
+            beforeMount={handleEditorWillMount}
             options={{
               minimap: { enabled: false },
               fontSize: 16,
