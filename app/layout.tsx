@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "imge ε> latex",
+  title: "image ε> latex",
   description: "Created by rafa & claude",
 };
 
