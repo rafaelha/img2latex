@@ -7,7 +7,7 @@ interface FeedbackProps {
   pageId: string; // Unique identifier for the page or feature being rated
 }
 
-const OneClickFeedback: React.FC<FeedbackProps> = ({ pageId }) => {
+const OneClickFeedBack: React.FC<FeedbackProps> = ({ pageId }) => {
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
 
   const handleFeedback = async (type: 'up' | 'down') => {
@@ -67,4 +67,4 @@ const OneClickFeedback: React.FC<FeedbackProps> = ({ pageId }) => {
   );
 };
 
-export default OneClickFeedback;
+export default OneClickFeedBack;
