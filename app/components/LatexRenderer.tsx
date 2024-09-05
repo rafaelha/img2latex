@@ -9,7 +9,7 @@ import OpenAI from 'openai';
 import { FiCopy, FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { IoMdClose, IoMdResize } from 'react-icons/io';
-import OneClickFeedBack from './OneClickFeedback';
+import OneClickFeedBack from './OneClickFeedBack';
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
