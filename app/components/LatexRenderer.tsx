@@ -262,7 +262,7 @@ function LatexRenderer() {
           {
             role: "user",
             content: [
-              { type: "text", text: "Convert this image to LaTeX code. Only provide the LaTeX code, no explanations. Return the plane latex without any latex code block." },
+              { type: "text", text: "Convert this image to LaTeX code. Only provide the LaTeX code, no explanations. Return the plane latex without any latex code block. Do not use any latex environments, just simple latex. If the pasted image is not valid latex, simply jokingly or casually describe what you see in a \\text{} command, making a joke about this not being math." },
               { type: "image_url", image_url: { url: base64Image } }
             ],
           },
