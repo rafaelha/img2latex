@@ -9,7 +9,7 @@ import OpenAI from 'openai';
 import { FiCopy, FiCheck, FiClipboard } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { IoMdClose, IoMdResize } from 'react-icons/io';
-import OneClickFeedback from './OneClickFeedback';
+import OneClickFeedBack from './OneClickFeedback';
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -484,7 +484,7 @@ function LatexRenderer() {
         </div>
       )}
       <div style={{ position: 'fixed', bottom: '20px', left: '20px', zIndex: 1000 }}>
-        <OneClickFeedback pageId="latex-renderer" />
+        <OneClickFeedBack pageId="latex-renderer" />
       </div>
     </div>
   );
