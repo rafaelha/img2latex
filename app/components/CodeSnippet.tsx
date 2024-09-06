@@ -7,6 +7,8 @@ import Editor from 'react-simple-code-editor';
 import hljs from 'highlight.js/lib/core';
 import 'highlight.js/styles/github-dark.css'; // You can choose a different theme if you prefer
 import latex from 'highlight.js/lib/languages/latex';
+import Latex from 'react-latex-next';
+import 'katex/dist/katex.min.css';
 
 hljs.registerLanguage('latex', latex);
 
@@ -29,10 +31,12 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ side_by_side }) => {
   };
 
   const borderRadius = side_by_side ? '8px 0 0 8px' : '8px 8px 0 0';
+  const borderRadiusLatex = side_by_side ? '0 8px 8px 0' : '0 0 8px 8px';
 
   return (
     <Box sx={{ 
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
@@ -104,6 +108,24 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ side_by_side }) => {
         >
           {copied ? 'Copied' : 'Copy'}
         </Button>
+      </Box>
+      
+      <Box sx={{
+        width: '100%',
+        maxWidth: '600px',
+        marginTop: 0,
+        padding: 2,
+        backgroundColor: '#000000',
+        borderRadius: borderRadiusLatex,
+        borderLeft: '1px solid #333',
+        borderRight: '1px solid #333',
+        borderBottom: '1px solid #333',
+        borderTop: 'none',
+        minHeight: '60px',
+        overflowX: 'auto',
+        color: '#ffffff',
+      }}>
+          <Latex>{code}</Latex>
       </Box>
     </Box>
   );
