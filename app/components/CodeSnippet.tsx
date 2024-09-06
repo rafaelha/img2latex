@@ -94,7 +94,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
             backgroundColor: '#000000',
             color: '#ffffff',
             border: '1px solid #333',
-            borderRadius: 0, // No rounded corners for the button
+            borderRadius: 2, // Rounded corners for the button
             '&:hover': {
               backgroundColor: '#111111',
               borderColor: '#0077ff', // Blue border on hover
