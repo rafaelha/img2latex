@@ -139,15 +139,21 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                 backgroundColor: '#000000',
                 color: '#ffffff',
                 border: '1px solid #333',
-                borderRadius: 2, // Rounded corners for the button
+                borderRadius: '25%', // Make it circular
+                minWidth: '36px', // Set a fixed width
+                width: '36px', // Set a fixed width
+                height: '36px', // Set a fixed height
+                padding: 0, // Remove padding
                 '&:hover': {
                   backgroundColor: '#111111',
                   borderColor: '#0077ff', // Blue border on hover
                 },
               }}
-              startIcon={copied ? <Check /> : <ContentCopy />}
             >
-              {copied ? 'Copied' : 'Copy'}
+              {copied ? 
+                <Check sx={{ fontSize: 20 }} /> : 
+                <ContentCopy sx={{ fontSize: 20 }} />
+              }
             </Button>
           </Box>
           
