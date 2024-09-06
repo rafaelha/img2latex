@@ -45,6 +45,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
         overflow: 'hidden',
         '& .editor-container': {
           position: 'relative',
+          minHeight: '60px', // Add this line
           '&::after': {
             content: '""',
             position: 'absolute',
@@ -76,6 +77,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
               fontSize: 14,
               backgroundColor: '#000000',
               color: '#ffffff',
+              minHeight: '60px',
             }}
           />
         </div>
