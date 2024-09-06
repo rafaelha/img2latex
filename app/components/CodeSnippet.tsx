@@ -4,9 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button } from '@mui/material';
 import { ContentCopy, Check } from '@mui/icons-material';
 import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs';
-import 'prismjs/themes/prism-tomorrow.css'; // You can choose a different theme if you prefer
-import 'prismjs/components/prism-javascript'; // Add more language support as needed
+import hljs from 'highlight.js/lib/core';
+import 'highlight.js/styles/github-dark.css'; // You can choose a different theme if you prefer
+import latex from 'highlight.js/lib/languages/latex';
+
+hljs.registerLanguage('latex', latex);
 
 interface CodeSnippetProps {
   left: boolean;
@@ -17,7 +19,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    Prism.highlightAll();
+    hljs.highlightAll();
   }, [code]);
 
   const handleCopy = () => {
@@ -70,7 +72,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
           <Editor
             value={code}
             onValueChange={code => setCode(code)}
-            highlight={code => Prism.highlight(code, Prism.languages.javascript, 'javascript')}
+            highlight={code => hljs.highlight(code, { language: 'latex' }).value}
             padding={10}
             style={{
               fontFamily: '"Fira code", "Fira Mono", monospace',
