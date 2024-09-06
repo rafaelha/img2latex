@@ -1,8 +1,12 @@
 'use client'
 
-import React, { useState } from 'react';
-import { Box, Button, TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Button } from '@mui/material';
 import { ContentCopy, Check } from '@mui/icons-material';
+import Editor from 'react-simple-code-editor';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism-tomorrow.css'; // You can choose a different theme if you prefer
+import 'prismjs/components/prism-javascript'; // Add more language support as needed
 
 interface CodeSnippetProps {
   left: boolean;
@@ -11,6 +15,10 @@ interface CodeSnippetProps {
 const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
   const [code, setCode] = useState('');
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    Prism.highlightAll();
+  }, [code]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
@@ -35,42 +43,42 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
         width: '100%',
         maxWidth: '600px',
         overflow: 'hidden',
+        '& .editor-container': {
+          position: 'relative',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            borderRadius: borderRadius,
+            border: '1px solid #333',
+            transition: 'border-color 0.3s',
+            pointerEvents: 'none',
+          },
+          '&:hover::after': {
+            borderColor: '#0077ff',
+          },
+          '&:focus-within::after': {
+            borderColor: '#0077ff',
+          },
+        },
       }}>
-        <TextField
-          multiline
-          fullWidth
-          variant="outlined"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          slotProps={{
-            input: {
-              style: {
-                fontFamily: 'Monospace',
-                color: '#ffffff',
-              },
-            },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
+        <div className="editor-container">
+          <Editor
+            value={code}
+            onValueChange={code => setCode(code)}
+            highlight={code => Prism.highlight(code, Prism.languages.javascript, 'javascript')}
+            padding={10}
+            style={{
+              fontFamily: '"Fira code", "Fira Mono", monospace',
+              fontSize: 14,
               backgroundColor: '#000000',
-              borderRadius: borderRadius,
-              '& fieldset': {
-                borderColor: '#333',
-                borderRadius: borderRadius,
-                transition: 'border-color 0.3s',
-              },
-              '&:hover fieldset': {
-                borderColor: '#0077ff',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#0077ff',
-              },
-            },
-            '& .MuiOutlinedInput-input': {
-              padding: 2,
-            },
-          }}
-        />
+              color: '#ffffff',
+            }}
+          />
+        </div>
         <Button 
           onClick={handleCopy}
           variant="contained"
