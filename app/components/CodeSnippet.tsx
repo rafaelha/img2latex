@@ -11,10 +11,10 @@ import latex from 'highlight.js/lib/languages/latex';
 hljs.registerLanguage('latex', latex);
 
 interface CodeSnippetProps {
-  left: boolean;
+  side_by_side: boolean;
 }
 
-const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
+const CodeSnippet: React.FC<CodeSnippetProps> = ({ side_by_side }) => {
   const [code, setCode] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -28,7 +28,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const borderRadius = left ? '8px 0 0 8px' : '0 0 8px 8px';
+  const borderRadius = side_by_side ? '8px 0 0 8px' : '8px 8px 0 0';
 
   return (
     <Box sx={{ 
