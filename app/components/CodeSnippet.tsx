@@ -4,15 +4,21 @@ import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { ContentCopy, Check } from '@mui/icons-material';
 
-const CodeSnippet = () => {
+interface CodeSnippetProps {
+  left: boolean;
+}
+
+const CodeSnippet: React.FC<CodeSnippetProps> = ({ left }) => {
   const [code, setCode] = useState('');
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset copied state after 2 seconds
+    setTimeout(() => setCopied(false), 2000);
   };
+
+  const borderRadius = left ? '8px 0 0 8px' : '0 0 8px 8px';
 
   return (
     <Box sx={{ 
@@ -25,7 +31,7 @@ const CodeSnippet = () => {
       <Box sx={{ 
         position: 'relative', 
         backgroundColor: '#000000',
-        borderRadius: 2,
+        borderRadius: borderRadius,
         width: '100%',
         maxWidth: '600px',
         overflow: 'hidden',
@@ -47,17 +53,17 @@ const CodeSnippet = () => {
           sx={{
             '& .MuiOutlinedInput-root': {
               backgroundColor: '#000000',
-              borderRadius: 2,
+              borderRadius: borderRadius,
               '& fieldset': {
                 borderColor: '#333',
-                borderRadius: 2,
+                borderRadius: borderRadius,
                 transition: 'border-color 0.3s',
               },
               '&:hover fieldset': {
-                borderColor: '#0077ff', // Blue border on hover
+                borderColor: '#0077ff',
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#0077ff', // Blue border when focused
+                borderColor: '#0077ff',
               },
             },
             '& .MuiOutlinedInput-input': {
@@ -76,6 +82,7 @@ const CodeSnippet = () => {
             backgroundColor: '#000000',
             color: '#ffffff',
             border: '1px solid #333',
+            borderRadius: 0, // No rounded corners for the button
             '&:hover': {
               backgroundColor: '#111111',
               borderColor: '#0077ff', // Blue border on hover
