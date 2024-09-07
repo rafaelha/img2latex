@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CodeSnippet from './components/CodeSnippet';
@@ -15,12 +15,9 @@ interface SnippetData {
 }
 
 export default function Home() {
-  const [snippets, setSnippets] = useState<SnippetData[]>([
-    // { id: 1, code: '$\\sqrt{x}$', isLoading: false },
-    // { id: 2, code: '$B(\\nu, T) = \\frac{2h\\nu^3}{c^2} \\cdot \\frac{1}{\\frac{h\\nu}{ek_BT} - 1}$', isLoading: false },
-  ]);
+  const [snippets, setSnippets] = useState<SnippetData[]>([]);
 
-  const handleImageReceived = async (file: File) => {
+  const handleImageReceived = useCallback(async (file: File) => {
     const newId = snippets.length + 1;
     setSnippets(prev => [...prev, { id: newId, code: '', isLoading: true }]);
 
@@ -35,7 +32,30 @@ export default function Home() {
         snippet.id === newId ? { ...snippet, code: 'Error processing image', isLoading: false } : snippet
       ));
     }
-  };
+  }, [snippets.length]);
+
+  useEffect(() => {
+    const handlePaste = async (event: ClipboardEvent) => {
+      const items = event.clipboardData?.items;
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf('image') !== -1) {
+            const blob = items[i].getAsFile();
+            if (blob) {
+              await handleImageReceived(blob);
+            }
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+
+    return () => {
+      window.removeEventListener('paste', handlePaste);
+    };
+  }, [handleImageReceived]);
 
   return (
     <div style={{ height: '100vh', margin: 100, padding: 0 }}>
