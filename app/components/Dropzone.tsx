@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IconButton } from '@mui/material';
 import { ContentPaste } from '@mui/icons-material';
+import Latex from 'react-latex-next';
 
 interface DropzoneProps {
   onImageReceived: (file: File) => void;
@@ -60,7 +61,9 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
         isDragActive ?
           <p style={{ textAlign: 'center' }}>Drop the image here ...</p> :
           <>
-            <p style={{ textAlign: 'center' }}>Drag and drop an image to convert it to LaTeX. Or paste from clipboard.</p>
+            <p style={{ textAlign: 'center' }}>
+              Drag and drop an image to convert it to <Latex>{'$\\LaTeX$'}</Latex>. Or paste from clipboard.
+            </p>
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
