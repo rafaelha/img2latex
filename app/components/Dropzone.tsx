@@ -52,7 +52,7 @@ const Dropzone: React.FC = () => {
         isDragActive ?
           <p style={{ textAlign: 'center' }}>Drop the image here ...</p> :
           <>
-            <p style={{ textAlign: 'center' }}>Drag and drop image to convert it to LaTeX. Or paste from clipboard.</p>
+            <p style={{ textAlign: 'center' }}>Drag and drop an image to convert it to LaTeX. Or paste from clipboard.</p>
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();

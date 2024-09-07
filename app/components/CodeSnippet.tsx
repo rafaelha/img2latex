@@ -15,17 +15,17 @@ hljs.registerLanguage('latex', latex);
 interface CodeSnippetProps {
   side_by_side: boolean;
   isLoading?: boolean;
-  maxWidth?: string;  // Add this line
-  marginBottom?: string;  // Add this line
+  marginBottom?: string;
+  initialCode?: string;
 }
 
 const CodeSnippet: React.FC<CodeSnippetProps> = ({ 
   side_by_side, 
   isLoading = false, 
-  maxWidth = '600px',
-  marginBottom = '20px'  // Add this line
+  marginBottom = '20px',
+  initialCode = ''
 }) => {
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode);  // Initialize with initialCode
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   const LoadingSkeleton = () => (
     <Box sx={{ 
       width: '100%',
-      maxWidth: maxWidth,
+      maxWidth: '700px',
       borderRadius: '8px',
       border: '1px solid #333',
       height: '120px',
@@ -77,7 +77,9 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
       height: '100%',
       backgroundColor: '#000000',
       position: 'relative',
-      marginBottom: marginBottom,  // Use the prop here
+      marginBottom: marginBottom,
+      width: '100%',
+      maxWidth: '700px',
     }}>
       {isLoading ? (
         <LoadingSkeleton />
@@ -88,32 +90,32 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             backgroundColor: '#000000',
             borderRadius: borderRadius,
             width: '100%',
-            maxWidth: maxWidth,
+            maxWidth: '700px',
             overflow: 'hidden',
-            '& .editor-container': {
-              position: 'relative',
-              minHeight: '60px', // Add this line
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-                borderRadius: borderRadius,
-                border: '1px solid #333',
-                transition: 'border-color 0.3s',
-                pointerEvents: 'none',
-              },
-              '&:hover::after': {
-                borderColor: '#0077ff',
-              },
-              '&:focus-within::after': {
-                borderColor: '#0077ff',
-              },
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              borderRadius: borderRadius,
+              border: '1px solid #333',
+              transition: 'border-color 0.3s',
+              pointerEvents: 'none',
+            },
+            '&:hover::after': {
+              borderColor: '#0077ff',
+            },
+            '&:focus-within::after': {
+              borderColor: '#0077ff',
             },
           }}>
-            <div className="editor-container">
+            <div style={{
+              paddingRight: '44px', // Add padding to the right for the button
+              width: '100%',
+              boxSizing: 'border-box',
+            }}>
               <Editor
                 value={code}
                 onValueChange={code => setCode(code)}
@@ -125,6 +127,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                   backgroundColor: '#000000',
                   color: '#ffffff',
                   minHeight: '60px',
+                  width: '100%', // Ensure the editor takes full width
                 }}
               />
             </div>
@@ -159,7 +162,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
           
           <Box sx={{
             width: '100%',
-            maxWidth: maxWidth,
+            maxWidth: '700px',
             marginTop: 0,
             padding: 2,
             backgroundColor: '#000000',
