@@ -5,13 +5,21 @@ import { useDropzone } from 'react-dropzone';
 import { IconButton } from '@mui/material';
 import { ContentPaste } from '@mui/icons-material';
 
-const Dropzone: React.FC = () => {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    // Handle the dropped files here
-    console.log(acceptedFiles);
-  }, []);
+interface DropzoneProps {
+  onImageReceived: (file: File) => void;
+}
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      onImageReceived(acceptedFiles[0]);
+    }
+  }, [onImageReceived]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
+    onDrop,
+    accept: {'image/*': []}
+  });
 
   const handlePaste = async () => {
     try {
@@ -20,9 +28,9 @@ const Dropzone: React.FC = () => {
         for (const type of clipboardItem.types) {
           if (type.startsWith('image/')) {
             const blob = await clipboardItem.getType(type);
-            // Handle the pasted image here
-            console.log('Pasted image:', blob);
-            // You can process the blob as needed
+            const file = new File([blob], "pasted-image.png", { type: blob.type });
+            onImageReceived(file);
+            break;
           }
         }
       }

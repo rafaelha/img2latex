@@ -1,13 +1,42 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CodeSnippet from './components/CodeSnippet';
 import Dropzone from './components/Dropzone';
 import { Box } from '@mui/material';
+import { getLatexFromImage } from './utils/openai';
+
+interface SnippetData {
+  id: number;
+  code: string;
+  isLoading: boolean;
+}
 
 export default function Home() {
+  const [snippets, setSnippets] = useState<SnippetData[]>([
+    // { id: 1, code: '$\\sqrt{x}$', isLoading: false },
+    // { id: 2, code: '$B(\\nu, T) = \\frac{2h\\nu^3}{c^2} \\cdot \\frac{1}{\\frac{h\\nu}{ek_BT} - 1}$', isLoading: false },
+  ]);
+
+  const handleImageReceived = async (file: File) => {
+    const newId = snippets.length + 1;
+    setSnippets(prev => [...prev, { id: newId, code: '', isLoading: true }]);
+
+    try {
+      const latexCode = await getLatexFromImage(file);
+      setSnippets(prev => prev.map(snippet => 
+        snippet.id === newId ? { ...snippet, code: latexCode, isLoading: false } : snippet
+      ));
+    } catch (error) {
+      console.error('Error processing image:', error);
+      setSnippets(prev => prev.map(snippet => 
+        snippet.id === newId ? { ...snippet, code: 'Error processing image', isLoading: false } : snippet
+      ));
+    }
+  };
+
   return (
     <div style={{ height: '100vh', margin: 100, padding: 0 }}>
       <Box sx={{ 
@@ -18,10 +47,15 @@ export default function Home() {
         maxWidth: '700px',
         margin: '0 auto',
       }}>
-        <CodeSnippet initialCode='$\sqrt{x}$' side_by_side={false} isLoading={false}/>
-        <CodeSnippet initialCode='$B(\nu, T) = \frac{2h\nu^3}{c^2} \cdot \frac{1}{\frac{h\nu}{ek_BT} - 1}$' side_by_side={false} isLoading={false}/>
-        <CodeSnippet side_by_side={false} isLoading={true}/>
-        <Dropzone />
+        {snippets.map((snippet) => (
+          <CodeSnippet 
+            key={snippet.id}
+            initialCode={snippet.code}
+            side_by_side={false}
+            isLoading={snippet.isLoading}
+          />
+        ))}
+        <Dropzone onImageReceived={handleImageReceived} />
       </Box>
       <Analytics />
       <SpeedInsights />

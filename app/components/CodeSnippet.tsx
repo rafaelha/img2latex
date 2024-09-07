@@ -29,6 +29,10 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    setCode(initialCode);
+  }, [initialCode]);
+
+  useEffect(() => {
     hljs.highlightAll();
   }, [code]);
 
@@ -118,7 +122,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             }}>
               <Editor
                 value={code}
-                onValueChange={code => setCode(code)}
+                onValueChange={setCode}
                 highlight={code => hljs.highlight(code, { language: 'latex' }).value}
                 padding={10}
                 style={{
