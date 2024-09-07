@@ -179,7 +179,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             overflowX: 'auto',
             color: '#ffffff',
           }}>
-            <Latex>{code.startsWith('$') && code.endsWith('$') ? code : code.length > 0 ? `$$${code}$$` : ''}</Latex>
+            <Latex>{code.length > 0 && !code.includes('$') ? `$$${code}$$` : code}</Latex>
           </Box>
         </>
       )}
