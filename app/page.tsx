@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CodeSnippet from './components/CodeSnippet';
 import Dropzone from './components/Dropzone';
-import { Box } from '@mui/material';
+import { Box, Alert, Snackbar } from '@mui/material';
 import { getLatexFromImage } from './utils/openai';
 
 interface SnippetData {
@@ -16,6 +16,7 @@ interface SnippetData {
 
 export default function Home() {
   const [snippets, setSnippets] = useState<SnippetData[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const handleImageReceived = useCallback(async (file: File) => {
     const newId = snippets.length + 1;
@@ -28,9 +29,8 @@ export default function Home() {
       ));
     } catch (error) {
       console.error('Error processing image:', error);
-      setSnippets(prev => prev.map(snippet => 
-        snippet.id === newId ? { ...snippet, code: 'Error processing image', isLoading: false } : snippet
-      ));
+      setError('Error processing image. Please try again.');
+      setSnippets(prev => prev.filter(snippet => snippet.id !== newId));
     }
   }, [snippets.length]);
 
@@ -57,6 +57,13 @@ export default function Home() {
     };
   }, [handleImageReceived]);
 
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setError(null);
+  };
+
   return (
     <div style={{ height: '100vh', margin: 100, padding: 0 }}>
       <Box sx={{ 
@@ -77,6 +84,11 @@ export default function Home() {
         ))}
         <Dropzone onImageReceived={handleImageReceived} />
       </Box>
+      <Snackbar open={!!error} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
       <Analytics />
       <SpeedInsights />
     </div>

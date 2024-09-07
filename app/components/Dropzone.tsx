@@ -62,7 +62,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
           <p style={{ textAlign: 'center' }}>Drop the image here ...</p> :
           <>
             <p style={{ textAlign: 'center' }}>
-              Drag and drop an image to convert it to <Latex>{'$\\LaTeX$'}</Latex>. Or paste from clipboard.
+              Drag and drop an image to convert it to <Latex>{'$\\LaTeX$'}</Latex>. <br />Or paste from clipboard.
             </p>
             <IconButton
               onClick={(e) => {
