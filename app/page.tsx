@@ -67,20 +67,15 @@ export default function Home() {
   };
 
   return (
-    <Box sx={{ 
-      height: '100vh', 
-      margin: isMobile ? 2 : 10, 
-      padding: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    }}>
+
+    <div style={{ height: '100vh', margin: isMobile ? 20 : 70, padding: 0 }}>
       <Box sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center',
         width: '100%',
         maxWidth: isMobile ? '100%' : '700px',
+        margin: '0 auto',
       }}>
         {snippets.map((snippet) => (
           <CodeSnippet 
@@ -99,6 +94,6 @@ export default function Home() {
       </Snackbar>
       <Analytics />
       <SpeedInsights />
-    </Box>
+    </div>
   );
 }
