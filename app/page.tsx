@@ -29,7 +29,7 @@ export default function Home() {
       ));
     } catch (error) {
       console.error('Error processing image:', error);
-      setError('Error processing image. Please try again.');
+      setError('Something went wrong. Sorry about that!');
       setSnippets(prev => prev.filter(snippet => snippet.id !== newId));
     }
   }, [snippets.length]);
