@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CodeSnippet from './components/CodeSnippet';
 import Dropzone from './components/Dropzone';
-import { Box, Alert, Snackbar } from '@mui/material';
+import { Box, Alert, Snackbar, useTheme, useMediaQuery } from '@mui/material';
 import { getLatexFromImage } from './utils/openai';
 
 interface SnippetData {
@@ -17,6 +17,8 @@ interface SnippetData {
 export default function Home() {
   const [snippets, setSnippets] = useState<SnippetData[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleImageReceived = useCallback(async (file: File) => {
     const newId = snippets.length + 1;
@@ -65,14 +67,20 @@ export default function Home() {
   };
 
   return (
-    <div style={{ height: '100vh', margin: 100, padding: 0 }}>
+    <Box sx={{ 
+      height: '100vh', 
+      margin: isMobile ? 2 : 10, 
+      padding: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}>
       <Box sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center',
         width: '100%',
-        maxWidth: '700px',
-        margin: '0 auto',
+        maxWidth: isMobile ? '100%' : '700px',
       }}>
         {snippets.map((snippet) => (
           <CodeSnippet 
@@ -91,6 +99,6 @@ export default function Home() {
       </Snackbar>
       <Analytics />
       <SpeedInsights />
-    </div>
+    </Box>
   );
 }

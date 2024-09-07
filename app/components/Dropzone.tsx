@@ -2,7 +2,7 @@
 
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { IconButton } from '@mui/material';
+import { IconButton, useTheme, useMediaQuery } from '@mui/material';
 import { ContentPaste } from '@mui/icons-material';
 import Latex from 'react-latex-next';
 
@@ -11,6 +11,9 @@ interface DropzoneProps {
 }
 
 const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       onImageReceived(acceptedFiles[0]);
@@ -62,7 +65,15 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
           <p style={{ textAlign: 'center' }}>Drop the image here ...</p> :
           <>
             <p style={{ textAlign: 'center' }}>
-              Drag and drop an image to convert it to <Latex>{'$\\LaTeX$'}</Latex>. <br />Or paste from clipboard.
+              {isMobile ? (
+                <>
+                  Tap to upload an image and convert it to <Latex>{'$\\LaTeX$'}</Latex>.
+                </>
+              ) : (
+                <>
+                  Drag and drop an image to convert it to <Latex>{'$\\LaTeX$'}</Latex>. <br />Or paste from clipboard.
+                </>
+              )}
             </p>
             <IconButton
               onClick={(e) => {
