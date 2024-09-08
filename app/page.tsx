@@ -9,7 +9,7 @@ import { Box, Alert, Snackbar, useTheme, useMediaQuery } from '@mui/material';
 import { getLatexFromImage } from './utils/openai';
 import { getDominantColor } from './utils/imageUtils';
 import Image from 'next/image';
-
+import { useIsMobile } from './utils/useIsMobile';
 interface SnippetData {
   id: number;
   code: string;
@@ -21,8 +21,7 @@ interface SnippetData {
 export default function Home() {
   const [snippets, setSnippets] = useState<SnippetData[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useIsMobile();
 
   const handleImageReceived = useCallback(async (file: File) => {
     const newId = snippets.length + 1;
@@ -88,13 +87,13 @@ export default function Home() {
 
   return (
 
-    <div style={{ height: '100vh', margin: isMobile ? 20 : 70, padding: 0 }}>
+    <div style={{ height: '100vh', marginLeft: isMobile ? 20 : 70, marginRight: isMobile ? 20 : 70, marginTop: 40, padding: 0 }}>
       <Box sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center',
         width: '100%',
-        maxWidth: isMobile ? '100%' : '700px',
+        maxWidth: '700px',
         margin: '0 auto',
       }}>
         {snippets.map((snippet) => (
@@ -116,7 +115,6 @@ export default function Home() {
                   padding: '4px',
                 }}>
                   <Box sx={{
-                    borderRadius: '6px',
                     overflow: 'hidden',
                     width: '100%',
                     display: 'flex',
@@ -132,9 +130,8 @@ export default function Home() {
                       style={{
                         width: 'auto',
                         height: 'auto',
-                        maxWidth: '100%',
-                        maxHeight: '600px', // Adjust this value as needed
-                        objectFit: 'contain',
+                        maxHeight: '500px',
+                        objectFit: 'scale-down',
                       }}
                     />
                   </Box>
