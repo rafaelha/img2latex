@@ -112,7 +112,7 @@ export default function Home() {
                 <Box sx={{
                   position: 'relative',
                   width: '100%',
-                  padding: '4px',
+                  padding: '0px',
                 }}>
                   <Box sx={{
                     overflow: 'hidden',
