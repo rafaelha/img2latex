@@ -23,7 +23,11 @@ export const getDominantColor = (imageUrl: string): Promise<string> => {
       let maxCount = 0;
       let dominantColor = 'rgb(0, 0, 0)';
 
-      for (let i = 0; i < data.length; i += 4) {
+      let skip = 4; // Start with no skip for small images
+      if (data.length > 1000000) skip = 4000; // For 1MP+ images, sample every 100th pixel
+      else if (data.length > 10000) skip = 100; // For 100K+ pixel images, sample every 50th pixel
+
+      for (let i = 0; i < data.length; i += 4 + skip) {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
