@@ -7,11 +7,15 @@ import CodeSnippet from './components/CodeSnippet';
 import Dropzone from './components/Dropzone';
 import { Box, Alert, Snackbar, useTheme, useMediaQuery } from '@mui/material';
 import { getLatexFromImage } from './utils/openai';
+import { getDominantColor } from './utils/imageUtils';
+import Image from 'next/image';
 
 interface SnippetData {
   id: number;
   code: string;
   isLoading: boolean;
+  imageUrl: string | null;
+  backgroundColor: string;
 }
 
 export default function Home() {
@@ -22,10 +26,25 @@ export default function Home() {
 
   const handleImageReceived = useCallback(async (file: File) => {
     const newId = snippets.length + 1;
-    setSnippets(prev => [...prev, { id: newId, code: '', isLoading: true }]);
+    const imageUrl = URL.createObjectURL(file);
 
     try {
+      // Get the dominant color immediately
+      const dominantColor = await getDominantColor(imageUrl);
+
+      // Add the new snippet with the correct background color
+      setSnippets(prev => [...prev, { 
+        id: newId, 
+        code: '', 
+        isLoading: true, 
+        imageUrl, 
+        backgroundColor: dominantColor 
+      }]);
+
+      // Now process the LaTeX
       const latexCode = await getLatexFromImage(file);
+
+      // Update the snippet with the LaTeX code
       setSnippets(prev => prev.map(snippet => 
         snippet.id === newId ? { ...snippet, code: latexCode, isLoading: false } : snippet
       ));
@@ -33,6 +52,7 @@ export default function Home() {
       console.error('Error processing image:', error);
       setError('Something went wrong. Sorry about that!');
       setSnippets(prev => prev.filter(snippet => snippet.id !== newId));
+      URL.revokeObjectURL(imageUrl);
     }
   }, [snippets.length]);
 
@@ -78,12 +98,55 @@ export default function Home() {
         margin: '0 auto',
       }}>
         {snippets.map((snippet) => (
-          <CodeSnippet 
-            key={snippet.id}
-            initialCode={snippet.code}
-            side_by_side={false}
-            isLoading={snippet.isLoading}
-          />
+          <React.Fragment key={snippet.id}>
+            {snippet.imageUrl && (
+              <Box sx={{ 
+                width: '100%', 
+                marginBottom: 2, 
+                borderRadius: '8px',
+                overflow: 'hidden',
+                position: 'relative',
+                border: '1px solid #333',
+                transition: 'border-color 0.3s, background-color 0.3s',
+                backgroundColor: snippet.backgroundColor,
+              }}>
+                <Box sx={{
+                  position: 'relative',
+                  width: '100%',
+                  padding: '4px',
+                }}>
+                  <Box sx={{
+                    borderRadius: '6px',
+                    overflow: 'hidden',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                    <Image 
+                      src={snippet.imageUrl} 
+                      alt="Pasted image"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{
+                        width: 'auto',
+                        height: 'auto',
+                        maxWidth: '100%',
+                        maxHeight: '600px', // Adjust this value as needed
+                        objectFit: 'contain',
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+            )}
+            <CodeSnippet 
+              initialCode={snippet.code}
+              side_by_side={false}
+              isLoading={snippet.isLoading}
+            />
+          </React.Fragment>
         ))}
         <Dropzone onImageReceived={handleImageReceived} />
       </Box>
