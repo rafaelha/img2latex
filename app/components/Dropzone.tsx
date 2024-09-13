@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IconButton, useTheme, useMediaQuery } from '@mui/material';
-import { ContentPaste } from '@mui/icons-material';
+import { ContentPaste, Close } from '@mui/icons-material';
 import Latex from 'react-latex-next';
 
 interface DropzoneProps {
@@ -13,6 +13,7 @@ interface DropzoneProps {
 const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [pasteError, setPasteError] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -25,23 +26,54 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
     accept: {'image/*': []}
   });
 
-  const handlePaste = async () => {
+  const handlePaste = useCallback(async (event?: ClipboardEvent) => {
     try {
-      const clipboardItems = await navigator.clipboard.read();
-      for (const clipboardItem of clipboardItems) {
-        for (const type of clipboardItem.types) {
-          if (type.startsWith('image/')) {
-            const blob = await clipboardItem.getType(type);
-            const file = new File([blob], "pasted-image.png", { type: blob.type });
-            onImageReceived(file);
-            break;
+      let items;
+      if (event) {
+        items = event.clipboardData?.items;
+      } else {
+        const clipboardItems = await navigator.clipboard.read();
+        items = clipboardItems[0].types.map(type => ({
+          type,
+          getAsFile: () => clipboardItems[0].getType(type)
+        }));
+      }
+
+      if (items) {
+        for (const item of items) {
+          if (item.type.indexOf('image') !== -1) {
+            const blob = await item.getAsFile();
+            if (blob) {
+              onImageReceived(blob);
+              return;
+            }
           }
         }
       }
+      throw new Error('No valid image found in clipboard');
     } catch (err) {
       console.error('Failed to read clipboard contents: ', err);
+      setPasteError(true);
+      setTimeout(() => setPasteError(false), 2000);
     }
-  };
+  }, [onImageReceived]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'v') {
+        event.preventDefault();
+        handlePaste();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('paste', handlePaste);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('paste', handlePaste);
+    };
+  }, [handlePaste]);
 
   return (
     <div {...getRootProps()} style={{
