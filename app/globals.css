@@ -8,13 +8,12 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 
-  /* Extracted color variables */
-  --primary-text: #ffffff;
-  --primary-background: #000000;
-  --secondary-background: #111111;
-  --border-color: #333333;
+  --primary-text: #000000;
+  --primary-background: #ffffff;
+  --secondary-background: #f3f3f3;
+  --border-color: #b0b0b0;
   --hover-border-color: #0077ff;
-  --button-background: rgba(0, 0, 0, 0.04);
+  --button-background: rgba(255, 255, 255, 0.04);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +21,13 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
+
+    --primary-text: #ffffff;
+    --primary-background: #000000;
+    --secondary-background: #111111;
+    --border-color: #333333;
+    --hover-border-color: #0077ff;
+    --button-background: rgba(0, 0, 0, 0.04);
   }
 }
 
