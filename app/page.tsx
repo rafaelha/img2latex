@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CodeSnippet from './components/CodeSnippet';
 import Dropzone from './components/Dropzone';
-import { Box, Alert, Snackbar, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Alert, Snackbar } from '@mui/material';
 import { getLatexFromImage } from './utils/openai';
 import { getDominantColor } from './utils/imageUtils';
 import Image from 'next/image';
 import { useIsMobile } from './utils/useIsMobile';
+
 interface SnippetData {
   id: number;
   code: string;
@@ -28,10 +29,8 @@ export default function Home() {
     const imageUrl = URL.createObjectURL(file);
 
     try {
-      // Get the dominant color immediately
       const dominantColor = await getDominantColor(imageUrl);
 
-      // Add the new snippet with the correct background color
       setSnippets(prev => [...prev, { 
         id: newId, 
         code: '', 
@@ -40,10 +39,8 @@ export default function Home() {
         backgroundColor: dominantColor 
       }]);
 
-      // Now process the LaTeX
       const latexCode = await getLatexFromImage(file);
 
-      // Update the snippet with the LaTeX code
       setSnippets(prev => prev.map(snippet => 
         snippet.id === newId ? { ...snippet, code: latexCode, isLoading: false } : snippet
       ));
@@ -54,29 +51,6 @@ export default function Home() {
       URL.revokeObjectURL(imageUrl);
     }
   }, [snippets.length]);
-
-  useEffect(() => {
-    const handlePaste = async (event: ClipboardEvent) => {
-      const items = event.clipboardData?.items;
-      if (items) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].type.indexOf('image') !== -1) {
-            const blob = items[i].getAsFile();
-            if (blob) {
-              await handleImageReceived(blob);
-            }
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener('paste', handlePaste);
-
-    return () => {
-      window.removeEventListener('paste', handlePaste);
-    };
-  }, [handleImageReceived]);
 
   const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
