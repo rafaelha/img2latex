@@ -115,7 +115,6 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             },
           }}>
             <div style={{
-              // paddingRight: '44px', // Add padding to the right for the button
               width: '100%',
               boxSizing: 'border-box',
               border: 'transparent',
@@ -133,8 +132,10 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                   border: 'transparent',
                   backgroundColor: 'transparent',
                   minHeight: '60px',
-                  width: '100%', // Ensure the editor takes full width
+                  width: '100%',
+                  outline: 'none', // Add this line to remove the default focus outline
                 }}
+                textareaClassName="editor-textarea" // Add this line to apply custom styles to the textarea
               />
             </div>
             <Button 
