@@ -79,7 +79,6 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      backgroundColor: '#000000',
       position: 'relative',
       marginBottom: marginBottom,
       width: '100%',
@@ -91,7 +90,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
         <>
           <Box sx={{ 
             position: 'relative', 
-            backgroundColor: '#000000',
+            backgroundColor: 'var(--secondary-background)',
             borderRadius: borderRadius,
             width: '100%',
             maxWidth: '700px',
@@ -109,10 +108,10 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
               pointerEvents: 'none',
             },
             '&:hover::after': {
-              borderColor: '#0077ff',
+              borderColor: 'var(--hover-border-color)',
             },
             '&:focus-within::after': {
-              borderColor: '#0077ff',
+              borderColor: 'var(--hover-border-color)',
             },
           }}>
             <div style={{
@@ -128,8 +127,8 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                 style={{
                   fontFamily: '"Fira code", "Fira Mono", monospace',
                   fontSize: 14,
-                  backgroundColor: '#000000',
-                  color: '#ffffff',
+                  backgroundColor: 'var(--secondary-background)',
+                  color: 'var(--primary-text)',
                   minHeight: '60px',
                   width: '100%', // Ensure the editor takes full width
                 }}
@@ -143,8 +142,8 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                 position: 'absolute',
                 top: 8,
                 right: 8,
-                backgroundColor: '#000000',
-                color: '#ffffff',
+                backgroundColor: 'var(--button-background)',
+                color: 'var(--primary-text)',
                 border: '1px solid #333',
                 borderRadius: '25%', // Make it circular
                 minWidth: '36px', // Set a fixed width
@@ -152,8 +151,8 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                 height: '36px', // Set a fixed height
                 padding: 0, // Remove padding
                 '&:hover': {
-                  backgroundColor: '#111111',
-                  borderColor: '#0077ff', // Blue border on hover
+                  backgroundColor: 'var(--button-background)',
+                  borderColor: 'var(--hover-border-color)',
                 },
               }}
             >
@@ -169,7 +168,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             maxWidth: '700px',
             marginTop: 0,
             padding: 2,
-            backgroundColor: '#000000',
+            backgroundColor: 'var(--secondary-background)',
             borderRadius: borderRadiusLatex,
             borderLeft: '1px solid #333',
             borderRight: '1px solid #333',
@@ -177,7 +176,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             borderTop: 'none',
             minHeight: '60px',
             overflowX: 'auto',
-            color: '#ffffff',
+            color: 'var(--primary-text)',
           }}>
             <Latex>{code.length > 0 && !code.includes('$') ? `$$${code}$$` : code}</Latex>
           </Box>
