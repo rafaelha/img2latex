@@ -112,18 +112,14 @@ export default function Home() {
         maxWidth: '700px',
         margin: '0 auto',
       }}>
-        <Box sx={{ width: '100%', marginBottom: 4 }}>
-          <CodeSnippet 
-            initialCode={sampleLatexCode}
-            side_by_side={false}
-            isLoading={true}
-          />
-        </Box>
-        {snippets.map((snippet) => (
+        <Dropzone onImageReceived={handleImageReceived} />
+        
+        {snippets.slice().reverse().map((snippet) => (
           <React.Fragment key={snippet.id}>
             {snippet.imageUrl && (
               <Box sx={{ 
                 width: '100%', 
+                marginTop: 2,
                 marginBottom: 2, 
                 borderRadius: '8px',
                 overflow: 'hidden',
@@ -168,7 +164,7 @@ export default function Home() {
             />
           </React.Fragment>
         ))}
-        <Dropzone onImageReceived={handleImageReceived} />
+        
       </Box>
       <Snackbar open={!!error} autoHideDuration={6000} onClose={handleCloseError}>
         <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
