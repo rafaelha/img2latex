@@ -59,17 +59,6 @@ export default function Home() {
     setError(null);
   };
 
-  const sampleLatexCode = `
-\\begin{equation}
-  E = mc^2
-\\end{equation}
-
-\\begin{align}
-  \\nabla \\times \\mathbf{E} &= -\\frac{\\partial \\mathbf{B}}{\\partial t} \\\\
-  \\nabla \\times \\mathbf{B} &= \\mu_0 \\mathbf{J} + \\mu_0 \\epsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}
-\\end{align}
-`;
-
   return (
     <div style={{ 
       minHeight: '100vh', 
@@ -94,11 +83,14 @@ export default function Home() {
               <Box sx={{ 
                 width: '100%', 
                 marginTop: 2,
-                marginBottom: 2, 
-                borderRadius: '8px',
+                marginBottom: 0, 
+                borderRadius: '8px 8px 0 0',
                 overflow: 'hidden',
                 position: 'relative',
-                border: '1px solid var(--border-color)',
+                borderTop: '1px solid var(--border-color)',
+                borderRight: '1px solid var(--border-color)',
+                borderLeft: '1px solid var(--border-color)',
+                borderBottom: '0',
                 transition: 'border-color 0.3s, background-color 0.3s',
                 backgroundColor: snippet.backgroundColor,
               }}>
