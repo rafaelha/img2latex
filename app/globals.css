@@ -3,9 +3,18 @@
 @tailwind utilities;
 
 :root {
+  /* Original color variables */
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+
+  /* Extracted color variables */
+  --primary-text: #ffffff;
+  --primary-background: #000000;
+  --secondary-background: #111111;
+  --border-color: #333333;
+  --hover-border-color: #0077ff;
+  --button-background: rgba(0, 0, 0, 0.04);
 }
 
 @media (prefers-color-scheme: dark) {

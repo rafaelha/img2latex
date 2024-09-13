@@ -86,12 +86,13 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
                 right: '8px',
                 width: '36px',
                 height: '36px',
-                backgroundColor: 'transparent', // Changed from '#000000' to 'transparent'
-                color: 'inherit', // This will inherit the color from the parent, adjusting to light/dark mode
-                border: '1px solid currentColor', // This will use the current text color for the border
+                backgroundColor: 'var(--button-background)',
+                color: 'var(--primary-text)', // This will inherit the color from the parent, adjusting to light/dark mode
+                border: '1px solid #333', // This will use the current text color for the border
+                transition: 'border-color 0.3s',
                 '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)', // A slight darkening on hover
-                  borderColor: '#0077ff',
+                  backgroundColor: 'var(--button-background)',
+                  borderColor: 'var(--hover-border-color)',
                 },
                 borderRadius: '25%',
               }}

@@ -85,6 +85,17 @@ export default function Home() {
     setError(null);
   };
 
+  const sampleLatexCode = `
+\\begin{equation}
+  E = mc^2
+\\end{equation}
+
+\\begin{align}
+  \\nabla \\times \\mathbf{E} &= -\\frac{\\partial \\mathbf{B}}{\\partial t} \\\\
+  \\nabla \\times \\mathbf{B} &= \\mu_0 \\mathbf{J} + \\mu_0 \\epsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}
+\\end{align}
+`;
+
   return (
 
     <div style={{ height: '100vh', marginLeft: isMobile ? 20 : 70, marginRight: isMobile ? 20 : 70, marginTop: 40, padding: 0 }}>
@@ -96,6 +107,13 @@ export default function Home() {
         maxWidth: '700px',
         margin: '0 auto',
       }}>
+        <Box sx={{ width: '100%', marginBottom: 4 }}>
+          <CodeSnippet 
+            initialCode={sampleLatexCode}
+            side_by_side={false}
+            isLoading={false}
+          />
+        </Box>
         {snippets.map((snippet) => (
           <React.Fragment key={snippet.id}>
             {snippet.imageUrl && (
