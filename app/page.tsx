@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CodeSnippet from './components/CodeSnippet';
 import Dropzone from './components/Dropzone';
-import { Box, Alert, Snackbar } from '@mui/material';
+import { Box, Alert, Snackbar } from '@mui/material'; // Remove GlobalStyles from this import
 import { getLatexFromImage } from './utils/openai';
 import { getDominantColor } from './utils/imageUtils';
 import Image from 'next/image';

@@ -50,3 +50,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.editor-textarea:focus {
+  outline: none !important;
+}
