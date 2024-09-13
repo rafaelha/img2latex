@@ -50,12 +50,13 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
       width: '100%',
       maxWidth: '700px',
       borderRadius: '8px',
-      border: '1px solid #333',
+      border: '1px solid var(--border-color)',
       height: '120px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: 'var(--secondary-background)',
       gap: 2,
       padding: 2,
     }}>
@@ -66,7 +67,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
           height="15px"
           animation="pulse"
           variant="rectangular"
-          sx={{ bgcolor: 'grey.800', borderRadius: '6px' }}
+          sx={{ bgcolor: 'var(--skeleton-background)', borderRadius: '6px' }}
         />
       ))}
     </Box>
@@ -103,7 +104,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
               bottom: 0,
               left: 0,
               borderRadius: borderRadius,
-              border: '1px solid #333',
+              border: '1px solid var(--border-color)',
               transition: 'border-color 0.3s',
               pointerEvents: 'none',
             },
@@ -115,9 +116,11 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             },
           }}>
             <div style={{
-              paddingRight: '44px', // Add padding to the right for the button
+              // paddingRight: '44px', // Add padding to the right for the button
               width: '100%',
               boxSizing: 'border-box',
+              border: 'transparent',
+              backgroundColor: 'transparent',
             }}>
               <Editor
                 value={code}
@@ -127,8 +130,9 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                 style={{
                   fontFamily: '"Fira code", "Fira Mono", monospace',
                   fontSize: 14,
-                  backgroundColor: 'var(--secondary-background)',
                   color: 'var(--primary-text)',
+                  border: 'transparent',
+                  backgroundColor: 'transparent',
                   minHeight: '60px',
                   width: '100%', // Ensure the editor takes full width
                 }}
@@ -136,7 +140,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             </div>
             <Button 
               onClick={handleCopy}
-              variant="contained"
+              variant="text" // Changed from "contained" to "text"
               size="small"
               sx={{
                 position: 'absolute',
@@ -144,15 +148,17 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                 right: 8,
                 backgroundColor: 'var(--button-background)',
                 color: 'var(--primary-text)',
-                border: '1px solid #333',
+                border: '1px solid var(--border-color)',
                 borderRadius: '25%', // Make it circular
                 minWidth: '36px', // Set a fixed width
                 width: '36px', // Set a fixed width
                 height: '36px', // Set a fixed height
                 padding: 0, // Remove padding
+                boxShadow: 'none', // Remove the shadow
                 '&:hover': {
                   backgroundColor: 'var(--button-background)',
                   borderColor: 'var(--hover-border-color)',
+                  boxShadow: 'none', // Ensure no shadow on hover
                 },
               }}
             >
@@ -170,9 +176,9 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
             padding: 2,
             backgroundColor: 'var(--secondary-background)',
             borderRadius: borderRadiusLatex,
-            borderLeft: '1px solid #333',
-            borderRight: '1px solid #333',
-            borderBottom: '1px solid #333',
+            borderLeft: '1px solid var(--border-color)',
+            borderRight: '1px solid var(--border-color)',
+            borderBottom: '1px solid var(--border-color)',
             borderTop: 'none',
             minHeight: '60px',
             overflowX: 'auto',
