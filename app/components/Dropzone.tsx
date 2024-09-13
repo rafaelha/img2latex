@@ -57,6 +57,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
       cursor: 'pointer',
       marginBottom: '20px',
       position: 'relative',
+      backgroundColor: 'var(--secondary-background)',
       padding: '0 50px', // Add horizontal padding
     }}>
       <input {...getInputProps()} />
