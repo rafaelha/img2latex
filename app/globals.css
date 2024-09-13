@@ -13,7 +13,7 @@
   --secondary-background: #ffffff;
   --border-color: #dddddd;
   --hover-border-color: #0077ff;
-  --button-background: rgba(255, 255, 255, 0.04);
+  --button-background: rgba(255, 255, 255, 0.705);
 
   --skeleton-background: #ebe9e9;
 }
@@ -29,7 +29,7 @@
     --secondary-background: #000000;
     --border-color: #444444;
     --hover-border-color: #0077ff;
-    --button-background: rgba(0, 0, 0, 0.04);
+    --button-background: rgba(0, 0, 0, 0.479);
 
     --skeleton-background: #4c4c4c;
   }
