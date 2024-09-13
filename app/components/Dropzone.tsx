@@ -48,7 +48,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
       width: '100%',
       maxWidth: '700px',
       height: '120px',
-      border: '1px dashed #333',
+      border: '1px dashed var(--border-color)',
       borderRadius: '8px',
       display: 'flex',
       flexDirection: 'column',
@@ -89,7 +89,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
                 height: '36px',
                 backgroundColor: 'var(--button-background)',
                 color: 'var(--primary-text)', // This will inherit the color from the parent, adjusting to light/dark mode
-                border: '1px solid #333', // This will use the current text color for the border
+                border: '1px solid var(--border-color)', // This will use the current text color for the border
                 transition: 'border-color 0.3s',
                 '&:hover': {
                   backgroundColor: 'var(--button-background)',

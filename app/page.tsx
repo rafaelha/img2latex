@@ -97,8 +97,13 @@ export default function Home() {
 `;
 
   return (
-
-    <div style={{ height: '100vh', marginLeft: isMobile ? 20 : 70, marginRight: isMobile ? 20 : 70, marginTop: 40, padding: 0 }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      marginLeft: isMobile ? 20 : 70, 
+      marginRight: isMobile ? 20 : 70, 
+      marginTop: 40, 
+      padding: 0,
+    }}>
       <Box sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
@@ -111,7 +116,7 @@ export default function Home() {
           <CodeSnippet 
             initialCode={sampleLatexCode}
             side_by_side={false}
-            isLoading={false}
+            isLoading={true}
           />
         </Box>
         {snippets.map((snippet) => (
@@ -123,7 +128,7 @@ export default function Home() {
                 borderRadius: '8px',
                 overflow: 'hidden',
                 position: 'relative',
-                border: '1px solid #333',
+                border: '1px solid var(--border-color)',
                 transition: 'border-color 0.3s, background-color 0.3s',
                 backgroundColor: snippet.backgroundColor,
               }}>
