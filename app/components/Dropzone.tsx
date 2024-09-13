@@ -3,7 +3,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IconButton, useTheme, useMediaQuery } from '@mui/material';
-import { ContentPaste, Close } from '@mui/icons-material';
+import { ContentPaste, CancelOutlined } from '@mui/icons-material';
 import Latex from 'react-latex-next';
 
 interface DropzoneProps {
@@ -30,23 +30,24 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
     try {
       let items;
       if (event) {
-        items = event.clipboardData?.items;
+        items = Array.from(event.clipboardData?.items || []);
       } else {
         const clipboardItems = await navigator.clipboard.read();
         items = clipboardItems[0].types.map(type => ({
           type,
-          getAsFile: () => clipboardItems[0].getType(type)
+          getAsFile: async () => {
+            const blob = await clipboardItems[0].getType(type);
+            return new File([blob], 'pasted-image', { type });
+          }
         }));
       }
 
-      if (items) {
-        for (const item of items) {
-          if (item.type.indexOf('image') !== -1) {
-            const blob = await item.getAsFile();
-            if (blob) {
-              onImageReceived(blob);
-              return;
-            }
+      for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+          const blob = await item.getAsFile();
+          if (blob) {
+            onImageReceived(blob);
+            return;
           }
         }
       }
@@ -90,7 +91,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
       marginBottom: '20px',
       position: 'relative',
       backgroundColor: 'var(--secondary-background)',
-      padding: '0 50px', // Add horizontal padding
+      padding: '0 50px',
     }}>
       <input {...getInputProps()} />
       {
@@ -120,9 +121,9 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
                 width: '36px',
                 height: '36px',
                 backgroundColor: 'var(--button-background)',
-                color: 'var(--primary-text)', // This will inherit the color from the parent, adjusting to light/dark mode
-                border: '1px solid var(--border-color)', // This will use the current text color for the border
-                transition: 'border-color 0.3s',
+                color: pasteError ? 'red' : 'var(--primary-text)',
+                border: '1px solid var(--border-color)',
+                transition: 'border-color 0.3s, background-color 0.3s, color 0.3s',
                 '&:hover': {
                   backgroundColor: 'var(--button-background)',
                   borderColor: 'var(--hover-border-color)',
@@ -130,7 +131,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
                 borderRadius: '25%',
               }}
             >
-              <ContentPaste />
+              {pasteError ? <CancelOutlined /> : <ContentPaste />}
             </IconButton>
           </>
       }
