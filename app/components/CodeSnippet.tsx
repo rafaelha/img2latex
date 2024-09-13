@@ -49,7 +49,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
     <Box sx={{ 
       width: '100%',
       maxWidth: '700px',
-      borderRadius: '8px',
+      borderRadius: '0 0 8px 8px',
       border: '1px solid var(--border-color)',
       height: '120px',
       display: 'flex',
@@ -92,7 +92,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
           <Box sx={{ 
             position: 'relative', 
             backgroundColor: 'var(--secondary-background)',
-            borderRadius: borderRadius,
+            borderRadius: 0,
             width: '100%',
             maxWidth: '700px',
             overflow: 'hidden',
@@ -103,7 +103,6 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
               right: 0,
               bottom: 0,
               left: 0,
-              borderRadius: borderRadius,
               border: '1px solid var(--border-color)',
               transition: 'border-color 0.3s',
               pointerEvents: 'none',
