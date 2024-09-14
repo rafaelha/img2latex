@@ -5,10 +5,9 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import Dropzone from './components/Dropzone';
 import { Box, Alert, Snackbar } from '@mui/material';
-import { getLatexFromImage } from './utils/openai';
-import { getDominantColor } from './utils/imageUtils';
 import { useIsMobile } from './utils/useIsMobile';
 import LaTeXPreview from './components/LaTeXPreview';
+import { handleImageReceived } from './utils/handleImageReceived';
 
 interface SnippetData {
   id: number;
@@ -23,33 +22,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
-  const handleImageReceived = useCallback(async (file: File) => {
-    const newId = snippets.length + 1;
-    const imageUrl = URL.createObjectURL(file);
-
-    try {
-      const dominantColor = await getDominantColor(imageUrl);
-
-      setSnippets(prev => [...prev, { 
-        id: newId, 
-        code: '', 
-        isLoading: true, 
-        imageUrl, 
-        backgroundColor: dominantColor 
-      }]);
-
-      const latexCode = await getLatexFromImage(file);
-
-      setSnippets(prev => prev.map(snippet => 
-        snippet.id === newId ? { ...snippet, code: latexCode, isLoading: false } : snippet
-      ));
-    } catch (error) {
-      console.error('Error processing image:', error);
-      setError('Something went wrong. Sorry about that!');
-      setSnippets(prev => prev.filter(snippet => snippet.id !== newId));
-      URL.revokeObjectURL(imageUrl);
-    }
-  }, [snippets.length]);
+  const handleImageReceivedCallback = useCallback((file: File) => {
+    handleImageReceived(file, snippets, setSnippets, setError)();
+  }, [snippets]);
 
   const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -74,7 +49,7 @@ export default function Home() {
         maxWidth: '700px',
         margin: '0 auto',
       }}>
-        <Dropzone onImageReceived={handleImageReceived} />
+        <Dropzone onImageReceived={handleImageReceivedCallback} />
         
         {snippets.slice().reverse().map((snippet) => (
           <LaTeXPreview
