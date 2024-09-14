@@ -37,7 +37,13 @@ export const handleImageReceived = (
       ));
     } catch (error) {
       console.error('Error processing image:', error);
-      setError('Something went wrong. Sorry about that!');
+      
+      if (error instanceof Error && error.message.includes('unsupported image')) {
+        setError('Unsupported image format. Please use PNG, JPEG, GIF, or WebP images under 20MB.');
+      } else {
+        setError('Something went wrong. Sorry about that!');
+      }
+      
       setSnippets(prev => prev.filter(snippet => snippet.id !== newId));
       URL.revokeObjectURL(imageUrl);
     }
