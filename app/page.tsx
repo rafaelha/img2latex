@@ -3,13 +3,12 @@
 import React, { useState, useCallback } from 'react';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import CodeSnippet from './components/CodeSnippet';
 import Dropzone from './components/Dropzone';
-import { Box, Alert, Snackbar } from '@mui/material'; // Remove GlobalStyles from this import
+import { Box, Alert, Snackbar } from '@mui/material';
 import { getLatexFromImage } from './utils/openai';
 import { getDominantColor } from './utils/imageUtils';
-import Image from 'next/image';
 import { useIsMobile } from './utils/useIsMobile';
+import LaTeXPreview from './components/LaTeXPreview';
 
 interface SnippetData {
   id: number;
@@ -78,57 +77,13 @@ export default function Home() {
         <Dropzone onImageReceived={handleImageReceived} />
         
         {snippets.slice().reverse().map((snippet) => (
-          <React.Fragment key={snippet.id}>
-            {snippet.imageUrl && (
-              <Box sx={{ 
-                width: '100%', 
-                marginTop: 2,
-                marginBottom: 0, 
-                borderRadius: '8px 8px 0 0',
-                overflow: 'hidden',
-                position: 'relative',
-                borderTop: '1px solid var(--border-color)',
-                borderRight: '1px solid var(--border-color)',
-                borderLeft: '1px solid var(--border-color)',
-                borderBottom: '0',
-                transition: 'border-color 0.3s, background-color 0.3s',
-                backgroundColor: snippet.backgroundColor,
-              }}>
-                <Box sx={{
-                  position: 'relative',
-                  width: '100%',
-                  padding: '0px',
-                }}>
-                  <Box sx={{
-                    overflow: 'hidden',
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                    <Image 
-                      src={snippet.imageUrl} 
-                      alt="Pasted image"
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      style={{
-                        width: 'auto',
-                        height: 'auto',
-                        maxHeight: '500px',
-                        objectFit: 'scale-down',
-                      }}
-                    />
-                  </Box>
-                </Box>
-              </Box>
-            )}
-            <CodeSnippet 
-              initialCode={snippet.code}
-              side_by_side={false}
-              isLoading={snippet.isLoading}
-            />
-          </React.Fragment>
+          <LaTeXPreview
+            key={snippet.id}
+            imageUrl={snippet.imageUrl}
+            backgroundColor={snippet.backgroundColor}
+            code={snippet.code}
+            isLoading={snippet.isLoading}
+          />
         ))}
         
       </Box>
