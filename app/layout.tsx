@@ -42,10 +42,20 @@ export default function RootLayout({
         style={{ backgroundColor: "var(--primary-background)" }}
       >
         <main className="flex-grow">{children}</main>
-        <footer className="text-center text-xs mt-8 mb-2">
-          <Link href="/about" className="text-gray-500 hover:text-gray-700">
-            About
-          </Link>
+        <footer className="w-full py-4 text-center border-t border-gray-100">
+          <div className="container mx-auto">
+            <Link
+              href="/about"
+              className="text-sm text-gray-500 hover:text-purple-600 transition-colors duration-200"
+              style={{
+                display: "inline-block",
+                padding: "8px 16px",
+                borderRadius: "4px",
+              }}
+            >
+              About
+            </Link>
+          </div>
         </footer>
         <StructuredData />
       </body>

@@ -418,7 +418,12 @@ export default function LandingPage() {
           variant="body1"
           align="center"
           color="text.secondary"
-          sx={{ mb: 6, maxWidth: "700px", mx: "auto", color: "var(--primary-text)" }}
+          sx={{
+            mb: 6,
+            maxWidth: "700px",
+            mx: "auto",
+            color: "var(--primary-text)",
+          }}
         >
           Our tool can handle a wide range of mathematical expressions, from
           simple equations to complex formulas
