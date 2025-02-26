@@ -17,7 +17,7 @@ interface SnippetData {
   backgroundColor: string;
 }
 
-export default function Home() {
+export default function ConvertPage() {
   const [snippets, setSnippets] = useState<SnippetData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const isMobile = useIsMobile();

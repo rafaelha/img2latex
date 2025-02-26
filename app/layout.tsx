@@ -8,25 +8,45 @@ import "katex/dist/katex.min.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Image to LaTeX Converter",
+  title: "Image to LaTeX Converter | Convert Equation Images to LaTeX Code",
   description:
-    "Convert images of LaTeX equations to editable LaTeX code using AI-powered image recognition. Simply snap an equation and paste.",
+    "Free online tool to convert images of mathematical equations to editable LaTeX code using AI-powered image recognition. Instantly transform handwritten or digital equation images into perfect LaTeX.",
   keywords:
-    "LaTeX, Image to LaTeX, Snip to LaTeX, LaTeX Image to Code Converter, AI-powered image recognition",
+    "LaTeX, Image to LaTeX, Snip to LaTeX, LaTeX Image to Code Converter, AI-powered image recognition, equation converter, math to LaTeX, OCR for math, math equation converter",
+  authors: [{ name: "Img2LaTeX" }],
+  creator: "Img2LaTeX",
+  publisher: "Img2LaTeX",
+  metadataBase: new URL("https://img2latex.xyz"),
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: "LaTeX Image to Code Converter",
+    title: "LaTeX Image to Code Converter | Free Math Equation Converter",
     description:
-      "Convert images of LaTeX equations to editable LaTeX code using AI-powered image recognition.",
+      "Convert images of LaTeX equations to editable LaTeX code using AI-powered image recognition. Free, instant and accurate.",
     type: "website",
     url: "https://img2latex.xyz",
-    // images: [
-    //   {
-    //     url: "https://your-website-url.com/og-image.jpg",
-    //     width: 1200,
-    //     height: 630,
-    //     alt: "LaTeX Image to Code Converter",
-    //   },
-    // ],
+    siteName: "Img2LaTeX",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "LaTeX Image to Code Converter",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Convert Equation Images to LaTeX Code Instantly",
+    description:
+      "Free tool to transform equation images into perfect LaTeX code",
+    images: ["/og-image.jpg"],
   },
 };
 
