@@ -41,16 +41,19 @@ export default function LandingPage() {
 
   const examples = [
     {
-      equation: "$$E = mc^2$$",
-      description: "Einstein's famous equation",
+      equation:
+        "$$\\frac{\\partial^2 f}{\\partial x^2} = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n!} \\int_{0}^{\\infty} e^{-t} t^n dt \\cdot \\nabla^2 f$$",
+      description: "Complex partial differential equation",
     },
     {
-      equation: "$$\\int_{a}^{b} f(x) \\, dx = F(b) - F(a)$$",
-      description: "Fundamental theorem of calculus",
+      equation:
+        "$$\\begin{array}{|c|c|c|} \\hline x & x^2 & \\sqrt{x} \\\\ \\hline 1 & 1 & 1 \\\\ \\hline 2 & 4 & 1.414 \\\\ \\hline 3 & 9 & 1.732 \\\\ \\hline 4 & 16 & 2 \\\\ \\hline \\end{array}$$",
+      description: "Mathematical table with values",
     },
     {
-      equation: "$$\\frac{d}{dx}[\\sin(x)] = \\cos(x)$$",
-      description: "Derivative of sine",
+      equation:
+        "$$\\begin{align} E[X] &= \\sum_{i} x_i p_i \\\\ Var[X] &= E[(X - E[X])^2] \\\\ &= \\sum_{i} (x_i - E[X])^2 p_i \\\\ &= E[X^2] - E[X]^2 \\end{align}$$",
+      description: "Multiline expectation and variance formulas",
     },
   ];
 
@@ -208,7 +211,7 @@ export default function LandingPage() {
             fontSize: { xs: "2rem", md: "2.5rem" },
             fontWeight: 700,
             mb: 6,
-            color: "#FFFFFF",
+            color: "var(--primary-text)",
           }}
         >
           How It Works
@@ -406,7 +409,7 @@ export default function LandingPage() {
             fontSize: { xs: "2rem", md: "2.5rem" },
             fontWeight: 700,
             mb: 2,
-            color: "#FFFFFF",
+            color: "var(--primary-text)",
           }}
         >
           Example Equations
@@ -415,7 +418,7 @@ export default function LandingPage() {
           variant="body1"
           align="center"
           color="text.secondary"
-          sx={{ mb: 6, maxWidth: "700px", mx: "auto", color: "#FFFFFF" }}
+          sx={{ mb: 6, maxWidth: "700px", mx: "auto", color: "var(--primary-text)" }}
         >
           Our tool can handle a wide range of mathematical expressions, from
           simple equations to complex formulas
