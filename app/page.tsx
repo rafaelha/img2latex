@@ -8,6 +8,7 @@ import Latex from "react-latex-next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { useIsMobile } from "./utils/useIsMobile";
+import Image from "next/image";
 
 export default function LandingPage() {
   const isMobile = useIsMobile();
@@ -76,24 +77,32 @@ export default function LandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Typography
-                  variant="h1"
-                  sx={{
-                    fontSize: { xs: "2.5rem", md: "3.5rem" },
-                    fontWeight: 700,
-                    mb: 2,
-                    lineHeight: 1.2,
-                  }}
-                >
-                  Image to{" "}
-                  <span
-                    className="latex-logo"
-                    style={{ display: "inline-block" }}
+                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                  <Image
+                    src="/logo.png"
+                    alt="Img2LaTeX Logo"
+                    width={120}
+                    height={120}
+                    style={{ marginRight: "16px" }}
+                  />
+                  <Typography
+                    variant="h1"
+                    sx={{
+                      fontSize: { xs: "2.5rem", md: "3.5rem" },
+                      fontWeight: 700,
+                      lineHeight: 1.2,
+                    }}
                   >
-                    <Latex>{"$\\LaTeX$"}</Latex>
-                  </span>{" "}
-                  Converter
-                </Typography>
+                    Image to{" "}
+                    <span
+                      className="latex-logo"
+                      style={{ display: "inline-block" }}
+                    >
+                      <Latex>{"$\\LaTeX$"}</Latex>
+                    </span>{" "}
+                    Converter
+                  </Typography>
+                </Box>
                 <Typography
                   variant="h2"
                   sx={{
