@@ -24,19 +24,19 @@ export default function LandingPage() {
       title: "High Accuracy OCR",
       description:
         "Powered by advanced AI-driven OCR technology to ensure precise LaTeX code generation",
-      icon: "🎯",
+      icon: "◉",
     },
     {
       title: "Easy to Use",
       description:
         "Simple drag & drop or paste interface for quick conversions",
-      icon: "🖱️",
+      icon: "▶",
     },
     {
       title: "Completely Free",
       description:
         "No subscriptions, no limits - convert as many equations as you need",
-      icon: "🆓",
+      icon: "∞",
     },
   ];
 
@@ -252,10 +252,10 @@ export default function LandingPage() {
                     justifyContent: "center",
                   }}
                 >
-                  📷
+                  ①
                 </Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  1. Upload Image
+                  Upload Image
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   Drag & drop your equation image or paste directly from
@@ -290,10 +290,10 @@ export default function LandingPage() {
                     justifyContent: "center",
                   }}
                 >
-                  🤖
+                  ②
                 </Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  2. LaTeX OCR Processing
+                  LaTeX OCR Processing
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   Our advanced LaTeX OCR technology analyzes the image and
@@ -329,10 +329,10 @@ export default function LandingPage() {
                     justifyContent: "center",
                   }}
                 >
-                  📋
+                  ③
                 </Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  3. Get LaTeX Code
+                  Get LaTeX Code
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   Copy the generated LaTeX code and use it in your documents
