@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Free online tool to convert images of mathematical equations to editable LaTeX code using AI-powered image recognition. Instantly transform handwritten or digital equation images into perfect LaTeX.",
   keywords:
-    "LaTeX, Image to LaTeX, Snip to LaTeX, LaTeX Image to Code Converter, AI-powered image recognition, equation converter, math to LaTeX, OCR for math, math equation converter",
+    "LaTeX OCR, latex ocr, Image to LaTeX, Snip to LaTeX, LaTeX Image to Code Converter, AI-powered image recognition, equation converter, math to LaTeX, OCR for math, math equation converter, mathematical OCR, equation OCR tool",
   authors: [{ name: "Img2LaTeX" }],
   creator: "Img2LaTeX",
   publisher: "Img2LaTeX",

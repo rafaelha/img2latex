@@ -19,7 +19,7 @@ const StructuredData: React.FC = () => {
       "Instant conversion of equation images to LaTeX",
       "High accuracy AI-powered recognition",
       "Support for complex mathematical notations",
-      "Free with no usage limitations",
+      "Free LaTeX OCR tool with no usage limitations",
     ],
     screenshot: "https://img2latex.xyz/og-image.jpg",
     softwareVersion: "1.0",
@@ -72,10 +72,18 @@ const StructuredData: React.FC = () => {
       },
       {
         "@type": "Question",
-        name: "How accurate is the conversion?",
+        name: "How accurate is the LaTeX OCR conversion?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Our AI-powered recognition system provides high accuracy for most equation images, especially those with clear visibility.",
+          text: "Our AI-powered LaTeX OCR system provides high accuracy for most equation images, especially those with clear visibility. The optical character recognition technology is specifically optimized for mathematical notation.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is LaTeX OCR?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "LaTeX OCR (Optical Character Recognition) is a technology that automatically recognizes and converts mathematical equations from images into editable LaTeX code format, eliminating the need for manual transcription.",
         },
       },
     ],
