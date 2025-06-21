@@ -23,7 +23,30 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/logo.png",
+        color: "#764ba2",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
   openGraph: {
     title: "LaTeX Image to Code Converter | Free Math Equation Converter",
     description:
@@ -34,7 +57,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "LaTeX Image to Code Converter",
@@ -46,8 +69,33 @@ export const metadata: Metadata = {
     title: "Convert Equation Images to LaTeX Code Instantly",
     description:
       "Free tool to transform equation images into perfect LaTeX code",
-    images: ["/og-image.jpg"],
+    images: ["/logo.png"],
+    creator: "@img2latex",
   },
+  category: "technology",
+  classification: "Educational Tool",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    telephone: false,
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#764ba2" },
+    { media: "(prefers-color-scheme: dark)", color: "#667eea" },
+  ],
+  colorScheme: "light dark",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Img2LaTeX",
+  },
+  applicationName: "Img2LaTeX",
+  generator: "Next.js",
 };
 
 export default function RootLayout({

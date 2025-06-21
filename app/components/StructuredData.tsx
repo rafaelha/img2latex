@@ -21,7 +21,8 @@ const StructuredData: React.FC = () => {
       "Support for complex mathematical notations",
       "Free LaTeX OCR tool with no usage limitations",
     ],
-    screenshot: "https://img2latex.xyz/og-image.jpg",
+    screenshot: "https://img2latex.xyz/logo.png",
+    logo: "https://img2latex.xyz/logo.png",
     softwareVersion: "1.0",
     aggregateRating: {
       "@type": "AggregateRating",
