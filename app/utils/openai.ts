@@ -19,7 +19,7 @@ export async function getLatexFromImage(imageFile: File): Promise<string> {
     const base64Image = await convertToBase64(imageFile);
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-2024-08-06",
+      model: "gpt-4.1-nano",
       messages: [
         {
           role: "user",
