@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon.ico",
+      "permanent": false
+    }
+  ]
+} 
