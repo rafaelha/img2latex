@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Upload or paste images of mathematical equations and instantly convert them to LaTeX code. Free, accurate and easy-to-use tool for students, researchers and professionals.",
   keywords:
-    "image to LaTeX converter, equation image converter, mathematical expression OCR, convert equation to LaTeX, math OCR tool, LaTeX generator",
+    "LaTeX OCR, latex ocr converter, image to LaTeX converter, equation image converter, mathematical expression OCR, convert equation to LaTeX, math OCR tool, LaTeX generator, equation OCR online",
   alternates: {
     canonical: "/convert",
   },

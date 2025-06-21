@@ -21,9 +21,9 @@ export default function LandingPage() {
       icon: "⚡",
     },
     {
-      title: "High Accuracy",
+      title: "High Accuracy OCR",
       description:
-        "Powered by advanced AI to ensure precise LaTeX code generation",
+        "Powered by advanced AI-driven OCR technology to ensure precise LaTeX code generation",
       icon: "🎯",
     },
     {
@@ -293,11 +293,12 @@ export default function LandingPage() {
                   🤖
                 </Box>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  2. AI Processing
+                  2. LaTeX OCR Processing
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                  Our advanced AI analyzes the image and extracts the
-                  mathematical notation
+                  Our advanced LaTeX OCR technology analyzes the image and
+                  extracts the mathematical notation using optical character
+                  recognition
                 </Typography>
               </Paper>
             </motion.div>
@@ -434,8 +435,9 @@ export default function LandingPage() {
             color: "var(--primary-text)",
           }}
         >
-          Our tool can handle a wide range of mathematical expressions, from
-          simple equations to complex formulas
+          Our LaTeX OCR tool can handle a wide range of mathematical
+          expressions, from simple equations to complex formulas using advanced
+          optical character recognition
         </Typography>
 
         <Grid container spacing={4} justifyContent="center">
