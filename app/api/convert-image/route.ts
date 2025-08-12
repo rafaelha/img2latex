@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
 
     // Make the OpenAI API call - force use of gpt-4.1-mini model for security
     const response = await openai.chat.completions.create({
-      model: "gpt-4.1-mini", // Hardcoded to prevent abuse
-      max_tokens: 1000, // Limit token usage
+      model: "gpt-5-mini", // Hardcoded to prevent abuse
+      max_completion_tokens: 1000, // Limit token usage
       messages: [
         {
           role: "user",
