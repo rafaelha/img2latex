@@ -7,34 +7,27 @@ import Dropzone from "../components/Dropzone";
 import { Box, Alert, Snackbar } from "@mui/material";
 import { useIsMobile } from "../utils/useIsMobile";
 import LaTeXPreview from "../components/LaTeXPreview";
-import { handleImageReceived } from "../utils/handleImageReceived";
+import StarBanner from "../components/StarBanner";
+import {
+  handleImageReceived,
+  type SnippetData,
+} from "../utils/handleImageReceived";
 import { takePendingImage } from "../utils/pendingImage";
-
-interface SnippetData {
-  id: number;
-  code: string;
-  isLoading: boolean;
-  imageUrl: string | null;
-  backgroundColor: string;
-}
 
 export default function ConvertPage() {
   const [snippets, setSnippets] = useState<SnippetData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
-  const handleImageReceivedCallback = useCallback(
-    (file: File) => {
-      handleImageReceived(file, snippets, setSnippets, setError)();
-    },
-    [snippets]
-  );
+  const handleImageReceivedCallback = useCallback((file: File) => {
+    handleImageReceived(file, setSnippets, setError);
+  }, []);
 
   // Process an image handed off from the landing page, if any.
   useEffect(() => {
     const file = takePendingImage();
     if (file) {
-      handleImageReceived(file, [], setSnippets, setError)();
+      handleImageReceived(file, setSnippets, setError);
     }
   }, []);
 
@@ -96,6 +89,7 @@ export default function ConvertPage() {
           {error}
         </Alert>
       </Snackbar>
+      <StarBanner />
       <Analytics />
       <SpeedInsights />
     </div>

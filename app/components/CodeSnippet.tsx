@@ -32,10 +32,6 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
     setCode(initialCode);
   }, [initialCode]);
 
-  useEffect(() => {
-    hljs.highlightAll();
-  }, [code]);
-
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
     setCopied(true);

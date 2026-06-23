@@ -1,87 +1,51 @@
 # Img2LaTeX
 
-Convert images of mathematical equations into clean, editable LaTeX code.
+Convert images of math equations into editable LaTeX code. Drop a screenshot, photo, or scan — or paste from your clipboard — and get LaTeX in seconds. Free and open source.
 
-Drop a screenshot, photo, or scan of an equation — or paste from your clipboard — and get accurate LaTeX in seconds. Powered by an OpenAI vision model. Free and open source.
+🔗 **[img2latex.xyz](https://img2latex.xyz)**
 
-🔗 Live at **[img2latex.xyz](https://img2latex.xyz)**
-
-## Features
-
-- **Image → LaTeX** via drag & drop, click-to-upload, or clipboard paste (Ctrl/Cmd+V)
-- Handles screenshots, photos of handwritten notes, and scans
-- Server-side API key handling — the key is never exposed to the browser
-- Light/dark mode, responsive, no account required
-
-## Tech stack
-
-- [Next.js 14](https://nextjs.org/) (App Router) + React 18 + TypeScript
-- [Tailwind CSS](https://tailwindcss.com/) and [MUI](https://mui.com/) for UI
-- [KaTeX](https://katex.org/) / [react-latex-next](https://github.com/harunjonuzi/React-Latex-Next) for rendering
-- [OpenAI API](https://platform.openai.com/) for image-to-LaTeX conversion
-
-## Getting started
-
-### Prerequisites
-
-- Node.js 18.17+ (or 20+)
-- An [OpenAI API key](https://platform.openai.com/api-keys) with the **Chat completions** (`model.request`) scope
-
-### Setup
+## Quick start
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Configure your environment
-cp .env.example .env.local
-# then edit .env.local and set OPENAI_API_KEY
-
-# 3. Run the dev server
+cp .env.example .env.local   # then set OPENAI_API_KEY
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### Scripts
+You'll need an [OpenAI API key](https://platform.openai.com/api-keys) with the **Chat completions** (`model.request`) scope. It's used server-side only — never exposed to the browser.
 
-| Command         | Description                          |
-| --------------- | ------------------------------------ |
-| `npm run dev`   | Start the development server         |
-| `npm run build` | Production build                     |
-| `npm run start` | Serve the production build           |
-| `npm run lint`  | Run ESLint                           |
+## Scripts
 
-## Configuration
+- `npm run dev` — development server
+- `npm run build` — production build
+- `npm run start` — serve the production build
+- `npm run lint` — run ESLint
 
-| Variable         | Required | Description                                                                 |
-| ---------------- | -------- | --------------------------------------------------------------------------- |
-| `OPENAI_API_KEY` | Yes      | Server-side OpenAI key. Used only by `app/api/convert-image/route.ts`.       |
+## Tech stack
 
-The model used for conversion is hardcoded in `app/api/convert-image/route.ts`.
+Next.js 14 (App Router) · React · TypeScript · Tailwind CSS · MUI · KaTeX · OpenAI API
 
 ## Project structure
 
 ```
 app/
   api/convert-image/   # Server route that calls OpenAI (holds the API key)
-  convert/             # The converter page (upload/paste → LaTeX)
-  components/          # Dropzone, LaTeX preview, code snippet, structured data
-  utils/               # Image helpers and the client-side API wrapper
+  convert/             # Converter page (upload/paste → LaTeX)
+  components/          # Dropzone, LaTeX preview, code snippet
+  utils/               # Image helpers + client-side API wrapper
   page.tsx             # Landing page
   about/               # About page
 ```
 
 ## Deployment
 
-Deploys cleanly to [Vercel](https://vercel.com/). Set `OPENAI_API_KEY` as an
-environment variable in the project settings, then deploy. Any Node.js host that
-supports Next.js works too.
+Deploys to [Vercel](https://vercel.com/) (or any Next.js host). Set `OPENAI_API_KEY` in the project's environment variables.
 
 ## Contributing
 
-Issues and pull requests are welcome. Please run `npm run lint` and
-`npm run build` before submitting.
+Issues and PRs welcome. Please run `npm run lint` and `npm run build` before submitting.
 
 ## License
 
