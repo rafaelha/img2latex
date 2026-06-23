@@ -40,9 +40,10 @@ const LaTeXPreview: React.FC<LaTeXPreviewProps> = ({ imageUrl, backgroundColor, 
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              <Image 
-                src={imageUrl} 
+              <Image
+                src={imageUrl}
                 alt="Pasted image"
+                unoptimized
                 width={0}
                 height={0}
                 sizes="100vw"

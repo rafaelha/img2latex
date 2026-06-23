@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: "https://img2latex.xyz/convert",
     images: [
       {
-        url: "/convert-og-image.jpg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Image to LaTeX Conversion Tool",

@@ -28,7 +28,6 @@ export async function getLatexFromImage(imageFile: File): Promise<string> {
     }
 
     const data = await response.json();
-    console.log("LaTeX result:", data.latex);
     return data.latex || "";
   } catch (error) {
     console.error("Error in getLatexFromImage:", error);
