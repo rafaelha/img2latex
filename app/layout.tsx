@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import StructuredData from "./components/StructuredData";
@@ -78,17 +78,6 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#764ba2" },
-    { media: "(prefers-color-scheme: dark)", color: "#667eea" },
-  ],
-  colorScheme: "light dark",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -96,6 +85,16 @@ export const metadata: Metadata = {
   },
   applicationName: "Img2LaTeX",
   generator: "Next.js",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -110,15 +109,19 @@ export default function RootLayout({
         style={{ backgroundColor: "var(--primary-background)" }}
       >
         <main className="flex-grow">{children}</main>
-        <footer className="w-full py-4 text-center border-t border-gray-100">
+        <footer
+          className="w-full py-4 text-center border-t"
+          style={{ borderColor: "var(--border-color)" }}
+        >
           <div className="container mx-auto">
             <Link
               href="/about"
-              className="text-sm text-gray-500 hover:text-purple-600 transition-colors duration-200"
+              className="text-sm transition-opacity duration-200 hover:opacity-60"
               style={{
                 display: "inline-block",
                 padding: "8px 16px",
-                borderRadius: "4px",
+                color: "var(--primary-text)",
+                opacity: 0.6,
               }}
             >
               About

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Dropzone from "../components/Dropzone";
@@ -8,6 +8,7 @@ import { Box, Alert, Snackbar } from "@mui/material";
 import { useIsMobile } from "../utils/useIsMobile";
 import LaTeXPreview from "../components/LaTeXPreview";
 import { handleImageReceived } from "../utils/handleImageReceived";
+import { takePendingImage } from "../utils/pendingImage";
 
 interface SnippetData {
   id: number;
@@ -28,6 +29,14 @@ export default function ConvertPage() {
     },
     [snippets]
   );
+
+  // Process an image handed off from the landing page, if any.
+  useEffect(() => {
+    const file = takePendingImage();
+    if (file) {
+      handleImageReceived(file, [], setSnippets, setError)();
+    }
+  }, []);
 
   const handleCloseError = (
     event?: React.SyntheticEvent | Event,

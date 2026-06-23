@@ -1,546 +1,269 @@
 "use client";
 
-import React from "react";
-import { Box, Typography, Button, Container, Grid, Paper } from "@mui/material";
-import { motion } from "framer-motion";
+import React, { useCallback, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Latex from "react-latex-next";
+import { useDropzone } from "react-dropzone";
+import { EB_Garamond } from "next/font/google";
+import { motion } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { useIsMobile } from "./utils/useIsMobile";
-import Image from "next/image";
+import { setPendingImage } from "./utils/pendingImage";
+
+const serif = EB_Garamond({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "500"],
+});
+
+const steps = [
+  {
+    title: "Upload or paste",
+    body: "Drag in a screenshot, photo, or scan of any equation — or paste straight from your clipboard.",
+  },
+  {
+    title: "We read the math",
+    body: "An AI model trained on scientific notation transcribes the image into precise LaTeX.",
+  },
+  {
+    title: "Copy the code",
+    body: "Get clean, editable LaTeX ready to drop into your paper, thesis, or notes.",
+  },
+];
+
+const faqs = [
+  {
+    q: "What is Img2LaTeX?",
+    a: "Img2LaTeX is a free online tool that converts images of mathematical equations into editable LaTeX code using AI-powered OCR. Upload a screenshot, photo, or scan and get clean LaTeX in seconds.",
+  },
+  {
+    q: "Is it really free?",
+    a: "Yes. Img2LaTeX is completely free, with no account, no subscription, and no limits on how many equations you convert.",
+  },
+  {
+    q: "What kinds of images work?",
+    a: "Screenshots from papers and slides, photos of handwritten notes, scans, and clipboard pastes all work. The tool focuses on the equation and ignores surrounding text.",
+  },
+  {
+    q: "What can I do with the output?",
+    a: "The generated LaTeX drops directly into documents, theses, presentations, Overleaf projects, and notes — anywhere LaTeX is supported.",
+  },
+];
 
 export default function LandingPage() {
-  const isMobile = useIsMobile();
-
-  const features = [
-    {
-      title: "Instant Conversion",
-      description:
-        "Upload an image of a LaTeX equation and get the code instantly",
-      icon: "⚡",
-    },
-    {
-      title: "High Accuracy OCR",
-      description:
-        "Powered by advanced AI-driven OCR technology to ensure precise LaTeX code generation",
-      icon: "◉",
-    },
-    {
-      title: "Easy to Use",
-      description:
-        "Simple drag & drop or paste interface for quick conversions",
-      icon: "▶",
-    },
-    {
-      title: "Completely Free",
-      description:
-        "No subscriptions, no limits - convert as many equations as you need",
-      icon: "∞",
-    },
-  ];
-
-  const examples = [
-    {
-      equation:
-        "$$\\frac{\\partial^2 f}{\\partial x^2} = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n!} \\int_{0}^{\\infty} e^{-t} t^n dt \\cdot \\nabla^2 f$$",
-      description: "Complex partial differential equation",
-    },
-    {
-      equation:
-        "$$\\begin{array}{|c|c|c|} \\hline x & x^2 & \\sqrt{x} \\\\ \\hline 1 & 1 & 1 \\\\ \\hline 2 & 4 & 1.414 \\\\ \\hline 3 & 9 & 1.732 \\\\ \\hline 4 & 16 & 2 \\\\ \\hline \\end{array}$$",
-      description: "Mathematical table with values",
-    },
-    {
-      equation:
-        "$$\\begin{align} E[X] &= \\sum_{i} x_i p_i \\\\ Var[X] &= E[(X - E[X])^2] \\\\ &= \\sum_{i} (x_i - E[X])^2 p_i \\\\ &= E[X^2] - E[X]^2 \\end{align}$$",
-      description: "Multiline expectation and variance formulas",
-    },
-  ];
-
   return (
-    <Box sx={{ overflow: "hidden" }}>
-      {/* Hero Section */}
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          color: "white",
-          py: { xs: 8, md: 12 },
-          position: "relative",
-        }}
-      >
-        <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                  <Image
-                    src="/logo.png"
-                    alt="Img2LaTeX Logo"
-                    width={120}
-                    height={120}
-                    style={{ marginRight: "16px" }}
-                  />
-                  <Typography
-                    variant="h1"
-                    sx={{
-                      fontSize: { xs: "2.5rem", md: "3.5rem" },
-                      fontWeight: 700,
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    Image to{" "}
-                    <span
-                      className="latex-logo"
-                      style={{ display: "inline-block" }}
-                    >
-                      <Latex>{"$\\LaTeX$"}</Latex>
-                    </span>{" "}
-                    Converter
-                  </Typography>
-                </Box>
-                <Typography
-                  variant="h2"
-                  sx={{
-                    fontSize: { xs: "1.25rem", md: "1.5rem" },
-                    fontWeight: 400,
-                    mb: 4,
-                    opacity: 0.9,
-                  }}
-                >
-                  Transform equation images into editable LaTeX code in seconds
-                </Typography>
-                <Link href="/convert" passHref>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      backgroundColor: "white",
-                      color: "#764ba2",
-                      fontWeight: 600,
-                      px: 4,
-                      py: 1.5,
-                      borderRadius: "8px",
-                      "&:hover": {
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      },
-                    }}
-                  >
-                    Try It Now
-                  </Button>
-                </Link>
-              </motion.div>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "relative",
-                    width: "100%",
-                    maxWidth: "500px",
-                    height: { xs: "300px", md: "400px" },
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
-                  }}
-                >
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      background: "rgba(255, 255, 255, 0.95)",
-                      borderRadius: "12px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      padding: "20px",
-                      boxShadow: "inset 0 0 20px rgba(0, 0, 0, 0.05)",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: "28px",
-                        marginBottom: "30px",
-                        width: "100%",
-                        textAlign: "center",
-                        color: "#000000",
-                      }}
-                    >
-                      <Latex>
-                        {"$$\\int_{a}^{b} f(x) \\, dx = F(b) - F(a)$$"}
-                      </Latex>
-                    </div>
-                    <div
-                      style={{
-                        background: "#f5f5f5",
-                        padding: "15px",
-                        borderRadius: "8px",
-                        width: "100%",
-                        maxWidth: "400px",
-                        fontFamily: "monospace",
-                        fontSize: "14px",
-                        color: "#333",
-                        overflowX: "auto",
-                        border: "1px solid #e0e0e0",
-                      }}
-                    >
-                      <code>{"\\int_{a}^{b} f(x) \\, dx = F(b) - F(a)"}</code>
-                    </div>
-                  </div>
-                </Box>
-              </motion.div>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* How It Works Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
-        <Typography
-          variant="h2"
-          align="center"
-          sx={{
-            fontSize: { xs: "2rem", md: "2.5rem" },
-            fontWeight: 700,
-            mb: 6,
-            color: "var(--primary-text)",
-          }}
+    <div className={serif.className} style={{ color: "var(--primary-text)" }}>
+      {/* ---------- Hero ---------- */}
+      <section className="min-h-[90vh] flex flex-col items-center justify-center px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          className="flex flex-col items-center max-w-3xl"
         >
-          How It Works
-        </Typography>
-
-        <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} md={4}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 4,
-                  height: "100%",
-                  borderRadius: "12px",
-                  border: "1px solid #eaeaea",
-                  textAlign: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    mb: 2,
-                    fontSize: "3rem",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  ①
-                </Box>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  Upload Image
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Drag & drop your equation image or paste directly from
-                  clipboard
-                </Typography>
-              </Paper>
-            </motion.div>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 4,
-                  height: "100%",
-                  borderRadius: "12px",
-                  border: "1px solid #eaeaea",
-                  textAlign: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    mb: 2,
-                    fontSize: "3rem",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  ②
-                </Box>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  LaTeX OCR Processing
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Our advanced LaTeX OCR technology analyzes the image and
-                  extracts the mathematical notation using optical character
-                  recognition
-                </Typography>
-              </Paper>
-            </motion.div>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 4,
-                  height: "100%",
-                  borderRadius: "12px",
-                  border: "1px solid #eaeaea",
-                  textAlign: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    mb: 2,
-                    fontSize: "3rem",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  ③
-                </Box>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                  Get LaTeX Code
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Copy the generated LaTeX code and use it in your documents
-                </Typography>
-              </Paper>
-            </motion.div>
-          </Grid>
-        </Grid>
-      </Container>
-
-      {/* Features Section */}
-      <Box sx={{ backgroundColor: "#f9f9f9", py: { xs: 6, md: 10 } }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="h2"
-            align="center"
-            sx={{
-              fontSize: { xs: "2rem", md: "2.5rem" },
-              fontWeight: 700,
-              mb: 6,
-              color: "#000000",
-            }}
+          <h1
+            className="leading-[1.05] tracking-tight"
+            style={{ fontSize: "clamp(2.75rem, 8vw, 5.5rem)" }}
           >
-            Features
-          </Typography>
+            Convert images to <Latex>{"$\\LaTeX$"}</Latex>.
+          </h1>
 
-          <Grid container spacing={4}>
-            {features.map((feature, index) => (
-              <Grid item xs={12} sm={6} key={index}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 3,
-                      height: "100%",
-                      borderRadius: "12px",
-                      border: "1px solid #eaeaea",
-                      display: "flex",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        mr: 2,
-                        fontSize: "2rem",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "50px",
-                        height: "50px",
-                        borderRadius: "12px",
-                        backgroundColor: "rgba(118, 75, 162, 0.1)",
-                      }}
-                    >
-                      {feature.icon}
-                    </Box>
-                    <Box>
-                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
-                        {feature.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {feature.description}
-                      </Typography>
-                    </Box>
-                  </Paper>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+          <p
+            className="mt-6"
+            style={{ fontSize: "clamp(1.25rem, 3vw, 1.85rem)", opacity: 0.7 }}
+          >
+            From scientists for{" "}
+            <em style={{ fontStyle: "italic" }}>everyone</em>. Always free.
+          </p>
 
-      {/* Examples Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
-        <Typography
-          variant="h2"
-          align="center"
-          sx={{
-            fontSize: { xs: "2rem", md: "2.5rem" },
-            fontWeight: 700,
-            mb: 2,
-            color: "var(--primary-text)",
+          <HeroDropzone />
+
+          <Link
+            href="/convert"
+            className="mt-8 text-sm sm:text-base border-b pb-0.5 transition-opacity duration-200 hover:opacity-60"
+            style={{ borderColor: "var(--primary-text)", opacity: 0.6 }}
+          >
+            Or click here &rarr;
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* ---------- What it is (SEO intro) ---------- */}
+      <Section>
+        <h2 className="text-center" style={headingStyle}>
+          Image to LaTeX, instantly
+        </h2>
+        <p
+          className="mt-8 mx-auto text-center"
+          style={{
+            fontSize: "clamp(1.1rem, 2.4vw, 1.4rem)",
+            lineHeight: 1.7,
+            opacity: 0.8,
+            maxWidth: "44rem",
           }}
         >
-          Example Equations
-        </Typography>
-        <Typography
-          variant="body1"
-          align="center"
-          color="text.secondary"
-          sx={{
-            mb: 6,
-            maxWidth: "700px",
-            mx: "auto",
-            color: "var(--primary-text)",
-          }}
-        >
-          Our LaTeX OCR tool can handle a wide range of mathematical
-          expressions, from simple equations to complex formulas using advanced
-          optical character recognition
-        </Typography>
+          Img2LaTeX is a free LaTeX OCR tool that converts images of
+          mathematical equations into clean, editable LaTeX code. Paste a
+          screenshot from a paper, snap a photo of handwritten notes, or drop in
+          a scan — and get accurate LaTeX in seconds. Built by researchers for
+          everyone.
+        </p>
+      </Section>
 
-        <Grid container spacing={4} justifyContent="center">
-          {examples.map((example, index) => (
-            <Grid item xs={12} md={4} key={index}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+      {/* ---------- How it works ---------- */}
+      <Section>
+        <h2 className="text-center" style={headingStyle}>
+          How it works
+        </h2>
+        <ol className="mt-14 mx-auto max-w-3xl grid gap-12 sm:grid-cols-3">
+          {steps.map((step, i) => (
+            <li key={step.title} className="text-center">
+              <div
+                style={{ fontSize: "2.5rem", opacity: 0.4, fontStyle: "italic" }}
               >
-                <Paper
-                  elevation={0}
-                  sx={{
-                    p: 4,
-                    height: "100%",
-                    borderRadius: "12px",
-                    border: "1px solid #eaeaea",
-                    textAlign: "center",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      mb: 3,
-                      minHeight: "60px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#000000",
-                    }}
-                  >
-                    <div style={{ width: "100%" }}>
-                      <Latex>{example.equation}</Latex>
-                    </div>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {example.description}
-                  </Typography>
-                </Paper>
-              </motion.div>
-            </Grid>
+                {i + 1}
+              </div>
+              <h3 className="mt-3 text-xl sm:text-2xl">{step.title}</h3>
+              <p
+                className="mt-3 text-base"
+                style={{ lineHeight: 1.65, opacity: 0.7 }}
+              >
+                {step.body}
+              </p>
+            </li>
           ))}
-        </Grid>
-      </Container>
+        </ol>
+      </Section>
 
-      {/* CTA Section */}
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          color: "white",
-          py: { xs: 6, md: 8 },
-          textAlign: "center",
-        }}
-      >
-        <Container maxWidth="md">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <Typography
-              variant="h2"
-              sx={{
-                fontSize: { xs: "2rem", md: "2.5rem" },
-                fontWeight: 700,
-                mb: 3,
-              }}
-            >
-              Ready to Convert Your Equations?
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ mb: 4, opacity: 0.9, maxWidth: "700px", mx: "auto" }}
-            >
-              Start using our free Image to LaTeX converter now and save hours
-              of manual typing
-            </Typography>
-            <Link href="/convert" passHref>
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  backgroundColor: "white",
-                  color: "#764ba2",
-                  fontWeight: 600,
-                  px: 4,
-                  py: 1.5,
-                  borderRadius: "8px",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                  },
-                }}
+      {/* ---------- FAQ (SEO) ---------- */}
+      <Section>
+        <h2 className="text-center" style={headingStyle}>
+          Questions
+        </h2>
+        <dl className="mt-14 mx-auto max-w-2xl flex flex-col gap-10">
+          {faqs.map((faq) => (
+            <div key={faq.q}>
+              <dt className="text-xl sm:text-2xl">{faq.q}</dt>
+              <dd
+                className="mt-2 text-base"
+                style={{ lineHeight: 1.7, opacity: 0.7 }}
               >
-                Try It Now
-              </Button>
-            </Link>
-          </motion.div>
-        </Container>
-      </Box>
+                {faq.a}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+
+      {/* ---------- Closing CTA ---------- */}
+      <section className="px-6 py-28 text-center">
+        <h2 style={headingStyle}>
+          Always free. For <em style={{ fontStyle: "italic" }}>everyone</em>.
+        </h2>
+        <div className="mt-10">
+          <Link
+            href="/convert"
+            className="text-lg sm:text-xl border-b pb-1 transition-opacity duration-200 hover:opacity-60"
+            style={{ borderColor: "var(--primary-text)" }}
+          >
+            Convert an image &rarr;
+          </Link>
+        </div>
+      </section>
 
       <Analytics />
       <SpeedInsights />
-    </Box>
+    </div>
+  );
+}
+
+const headingStyle: React.CSSProperties = {
+  fontSize: "clamp(1.85rem, 4.5vw, 2.75rem)",
+  lineHeight: 1.15,
+  letterSpacing: "-0.01em",
+};
+
+function HeroDropzone() {
+  const router = useRouter();
+
+  const forward = useCallback(
+    (file: File) => {
+      setPendingImage(file);
+      router.push("/convert");
+    },
+    [router]
+  );
+
+  const onDrop = useCallback(
+    (files: File[]) => {
+      if (files[0]) forward(files[0]);
+    },
+    [forward]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [] },
+    multiple: false,
+  });
+
+  // Paste an image anywhere on the landing page (Ctrl/Cmd+V).
+  useEffect(() => {
+    const onPaste = (event: ClipboardEvent) => {
+      const items = Array.from(event.clipboardData?.items || []);
+      for (const item of items) {
+        if (item.type.startsWith("image")) {
+          const file = item.getAsFile();
+          if (file) {
+            event.preventDefault();
+            forward(file);
+            return;
+          }
+        }
+      }
+    };
+    window.addEventListener("paste", onPaste);
+    return () => window.removeEventListener("paste", onPaste);
+  }, [forward]);
+
+  return (
+    <div
+      {...getRootProps()}
+      className="mt-12 w-full max-w-xl cursor-pointer rounded-lg border border-dashed px-8 py-10 text-center transition-opacity duration-200 hover:opacity-70"
+      style={{
+        borderColor: "var(--primary-text)",
+        opacity: isDragActive ? 0.7 : 1,
+      }}
+    >
+      <input {...getInputProps()} />
+      <p className="text-lg sm:text-xl">
+        {isDragActive
+          ? "Drop to convert"
+          : "Drop an image, click to upload, or paste"}
+      </p>
+      <p className="mt-2 text-sm" style={{ opacity: 0.5 }}>
+        PNG, JPEG, GIF, or WebP
+      </p>
+    </div>
+  );
+}
+
+function Section({ children }: { children: React.ReactNode }) {
+  return (
+    <section
+      className="px-6 py-24 border-t"
+      style={{ borderColor: "var(--border-color)" }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="mx-auto max-w-5xl"
+      >
+        {children}
+      </motion.div>
+    </section>
   );
 }

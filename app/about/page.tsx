@@ -1,138 +1,80 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, Container, Paper, Divider } from "@mui/material";
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { EB_Garamond } from "next/font/google";
+import { motion } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+const serif = EB_Garamond({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "500"],
+});
+
 export default function About() {
   return (
-    <Box sx={{ overflow: "hidden" }}>
-      {/* Header Section */}
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          color: "white",
-          py: { xs: 6, md: 8 },
-          textAlign: "center",
-        }}
-      >
-        <Container maxWidth="md">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: { xs: "2.5rem", md: "3.5rem" },
-                fontWeight: 700,
-                mb: 2,
-                lineHeight: 1.2,
-              }}
-            >
-              About
-            </Typography>
-            <Typography
-              variant="h2"
-              sx={{
-                fontSize: { xs: "1.25rem", md: "1.5rem" },
-                fontWeight: 400,
-                mb: 4,
-                opacity: 0.9,
-                maxWidth: "700px",
-                mx: "auto",
-              }}
-            >
-              The Image to LaTeX Converter
-            </Typography>
-          </motion.div>
-        </Container>
-      </Box>
-
-      {/* Content Section */}
-      <Container maxWidth="md" sx={{ py: { xs: 6, md: 10 } }}>
+    <div
+      className={serif.className}
+      style={{ color: "var(--primary-text)" }}
+    >
+      <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          className="flex flex-col items-center max-w-2xl"
         >
-          <Paper
-            elevation={0}
-            sx={{
-              p: 6,
-              borderRadius: "12px",
-              border: "1px solid #eaeaea",
-              textAlign: "center",
-              mb: 6,
+          <h1
+            className="leading-[1.05] tracking-tight"
+            style={{ fontSize: "clamp(2.5rem, 7vw, 4.5rem)" }}
+          >
+            About
+          </h1>
+
+          <p
+            className="mt-8"
+            style={{
+              fontSize: "clamp(1.15rem, 2.6vw, 1.5rem)",
+              lineHeight: 1.7,
+              opacity: 0.8,
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                mb: 4,
-                fontWeight: 600,
-                color: "#764ba2",
-              }}
-            >
-              Made with ❤️ by Rafael Haenel
-            </Typography>
+            Img2LaTeX was built by researchers, for{" "}
+            <em style={{ fontStyle: "italic" }}>everyone</em>. A free tool that
+            turns a picture of any equation into clean, editable LaTeX — so you
+            can spend your time on the ideas, not the typing.
+          </p>
 
-            <Typography
-              variant="body1"
-              sx={{
-                mb: 4,
-                color: "text.secondary",
-              }}
-            >
+          <div
+            className="mt-14 pt-10 border-t w-full"
+            style={{ borderColor: "var(--border-color)" }}
+          >
+            <p className="text-xl sm:text-2xl">Made by Rafael Haenel</p>
+            <p className="mt-2 text-base" style={{ opacity: 0.6 }}>
               Vancouver, BC
-            </Typography>
-
-            <Divider sx={{ width: "60px", mx: "auto", mb: 4 }} />
-
-            <Typography
-              variant="body2"
-              sx={{
-                fontStyle: "italic",
-                color: "text.secondary",
-              }}
+            </p>
+            <p
+              className="mt-8 text-base"
+              style={{ fontStyle: "italic", opacity: 0.55 }}
             >
               Transforming equations into code, one image at a time.
-            </Typography>
-          </Paper>
-        </motion.div>
+            </p>
+          </div>
 
-        <Box sx={{ textAlign: "center", mt: 6 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+          <Link
+            href="/"
+            className="mt-14 text-base sm:text-lg border-b pb-0.5 transition-opacity duration-200 hover:opacity-60"
+            style={{ borderColor: "var(--primary-text)", opacity: 0.7 }}
           >
-            <Link href="/" passHref>
-              <Typography
-                component="span"
-                sx={{
-                  display: "inline-block",
-                  color: "#764ba2",
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  "&:hover": {
-                    textDecoration: "underline",
-                  },
-                }}
-              >
-                ← Back to Home
-              </Typography>
-            </Link>
-          </motion.div>
-        </Box>
-      </Container>
+            &larr; Back to home
+          </Link>
+        </motion.div>
+      </section>
 
       <Analytics />
       <SpeedInsights />
-    </Box>
+    </div>
   );
 }
