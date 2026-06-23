@@ -65,21 +65,12 @@ const Dropzone: React.FC<DropzoneProps> = ({ onImageReceived }) => {
     [onImageReceived]
   );
 
+  // The native `paste` event covers keyboard paste (Ctrl/Cmd+V) on every
+  // platform; the toolbar button calls handlePaste() directly via the
+  // Clipboard API.
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === "v") {
-        event.preventDefault();
-        handlePaste();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("paste", handlePaste);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("paste", handlePaste);
-    };
+    return () => window.removeEventListener("paste", handlePaste);
   }, [handlePaste]);
 
   return (

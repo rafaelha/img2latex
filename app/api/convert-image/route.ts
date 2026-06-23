@@ -6,6 +6,24 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Server-side only, no NEXT_PUBLIC_ prefix
 });
 
+// Model is hardcoded (not taken from the request) so the public endpoint can't
+// be abused to call arbitrary/expensive models.
+const MODEL = "gpt-5.4-mini";
+
+const PROMPT = [
+  "Convert this image to LaTeX code. Only provide the LaTeX code, no explanations.",
+  "The LaTeX code must be enclosed in a math environment, like \\begin{align} ... \\end{align}",
+  "or \\begin{align*} ... \\end{align*} if no equation numbers are in the image. Do not use \\tag{}.",
+  "Note that the align environment adds line numbers automatically.",
+  "Also make sure to set & for alignment if there are multi line equations.",
+  "Return the plain LaTeX. Do not wrap the output in ```latex ... ``` fences, just plain LaTeX.",
+  "If the image is not valid LaTeX, first try your best to interpret it — e.g. a single pasted symbol",
+  "should return the appropriate LaTeX command for that symbol.",
+  "If the user uploads a photo of a paper, identify the equation in the centre and ignore surrounding text.",
+  "If there is really no way to transcribe the image, jokingly or casually describe what you see in a",
+  "phrase that uses LaTeX commands or symbols in some funny way — be creative!",
+].join(" ");
+
 export async function POST(request: NextRequest) {
   try {
     // Parse the request body to get the base64 image
@@ -23,23 +41,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Make the OpenAI API call - force a fixed model for security
     const response = await openai.chat.completions.create({
-      model: "gpt-5.4-mini", // Hardcoded to prevent abuse
-      max_completion_tokens: 1000, // Limit token usage
+      model: MODEL,
+      max_completion_tokens: 1000, // Cap token usage per request
       reasoning_effort: "low",
       messages: [
         {
           role: "user",
           content: [
-            {
-              type: "text",
-              text: "Convert this image to LaTeX code. Only provide the LaTeX code, no explanations. The LaTeX code must be enclosed in a math environment, like \\begin{align} ... \\end{align} or \\begin{align*} ... \\end{align*} if no equation numbers are in the image. Do not use \\tag{}. Note that the align environment adds line numbers automatically. Also make sure to set & for alignment if there are multi line equations. Return the plain LaTeX. Do not use ```latex ...``` enclosings for our output, just simple LaTeX. If the pasted image is not valid LaTeX, first try your best to interpret it. For example, users might paste in a single symbol - you can return the appropriate LaTeX command for that symbol. Or users might upload a photo of a paper. Do your best to identify the equation in the centre and ignore any surrounding text. If there is really no way to transcribe the image into LaTeX, simply jokingly or casually describe what you see in a phrase that contains latex commands or symbols in some funny way - be creative!",
-            },
-            {
-              type: "image_url",
-              image_url: { url: image },
-            },
+            { type: "text", text: PROMPT },
+            { type: "image_url", image_url: { url: image } },
           ],
         },
       ],

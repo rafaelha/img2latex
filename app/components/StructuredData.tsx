@@ -24,13 +24,6 @@ const StructuredData: React.FC = () => {
     screenshot: "https://img2latex.xyz/logo.png",
     logo: "https://img2latex.xyz/logo.png",
     softwareVersion: "1.0",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      ratingCount: "120",
-      bestRating: "5",
-      worstRating: "1",
-    },
     author: {
       "@type": "Organization",
       name: "Img2LaTeX",

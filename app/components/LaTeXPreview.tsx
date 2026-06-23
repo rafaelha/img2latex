@@ -58,11 +58,7 @@ const LaTeXPreview: React.FC<LaTeXPreviewProps> = ({ imageUrl, backgroundColor, 
           </Box>
         </Box>
       )}
-      <CodeSnippet 
-        initialCode={code}
-        side_by_side={false}
-        isLoading={isLoading}
-      />
+      <CodeSnippet initialCode={code} isLoading={isLoading} />
     </>
   );
 };
