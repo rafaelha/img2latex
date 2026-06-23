@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Make the OpenAI API call - force use of gpt-4.1-mini model for security
+    // Make the OpenAI API call - force a fixed model for security
     const response = await openai.chat.completions.create({
-      model: "gpt-5-mini", // Hardcoded to prevent abuse
+      model: "gpt-5.4-mini", // Hardcoded to prevent abuse
       max_completion_tokens: 1000, // Limit token usage
       reasoning_effort: "low",
       messages: [
@@ -49,7 +49,16 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ latex: latexCode });
   } catch (error) {
-    console.error("Error in convert-image API:", error);
+    // Log the actionable parts of OpenAI errors (status/code/message) so issues
+    // like an invalid key, missing scope, or deprecated model are obvious in the
+    // server logs instead of a bare 500.
+    if (error instanceof OpenAI.APIError) {
+      console.error(
+        `OpenAI API error in convert-image: status=${error.status} code=${error.code} type=${error.type} message=${error.message}`
+      );
+    } else {
+      console.error("Error in convert-image API:", error);
+    }
 
     // Return a generic error message to avoid exposing internal details
     return NextResponse.json(
