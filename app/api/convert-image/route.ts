@@ -8,7 +8,7 @@ const openai = new OpenAI({
 
 // Model is hardcoded (not taken from the request) so the public endpoint can't
 // be abused to call arbitrary/expensive models.
-const MODEL = "gpt-5.4-mini";
+const MODEL = "gpt-5.6-luna";
 
 const PROMPT = [
   "Convert this image to LaTeX code. Only provide the LaTeX code, no explanations.",
@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
 
     const response = await openai.chat.completions.create({
       model: MODEL,
-      max_completion_tokens: 1000, // Cap token usage per request
-      reasoning_effort: "low",
+      max_completion_tokens: 4000,
+      reasoning_effort: "medium",
       messages: [
         {
           role: "user",
