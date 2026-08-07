@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { normalizeLatexSource } from "../../utils/latex";
 
 // Initialize OpenAI client with server-side environment variable
 const openai = new OpenAI({
@@ -12,9 +13,9 @@ const MODEL = "gpt-5.6-luna";
 
 const PROMPT = [
   "Convert this image to LaTeX code. Only provide the LaTeX code, no explanations.",
-  "The LaTeX code must be enclosed in a math environment, like \\begin{align} ... \\end{align}",
-  "or \\begin{align*} ... \\end{align*} if no equation numbers are in the image. Do not use \\tag{}.",
-  "Note that the align environment adds line numbers automatically.",
+  "Return only the equation contents that belong inside an implicit \\begin{align*} ... \\end{align*} renderer.",
+  "Do not return a top-level math environment or delimiters such as \\begin{...}, \\end{...}, $, \\(, \\), \\[, or \\].",
+  "Keep meaningful inner environments such as \\begin{matrix} or \\begin{cases} when they are part of the expression.",
   "Also make sure to set & for alignment if there are multi line equations.",
   "Return the plain LaTeX. Do not wrap the output in ```latex ... ``` fences, just plain LaTeX.",
   "If the image is not valid LaTeX, first try your best to interpret it — e.g. a single pasted symbol",
@@ -56,7 +57,9 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    const latexCode = response.choices[0].message.content || "";
+    const latexCode = normalizeLatexSource(
+      response.choices[0].message.content || ""
+    );
 
     return NextResponse.json({ latex: latexCode });
   } catch (error) {

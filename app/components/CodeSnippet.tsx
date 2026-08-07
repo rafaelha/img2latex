@@ -9,6 +9,7 @@ import 'highlight.js/styles/github-dark.css';
 import latex from 'highlight.js/lib/languages/latex';
 import Latex from 'react-latex-next';
 import 'katex/dist/katex.min.css';
+import { getLatexPreviewSource, normalizeLatexSource } from '../utils/latex';
 
 hljs.registerLanguage('latex', latex);
 
@@ -53,22 +54,24 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   marginBottom = '20px',
   initialCode = '',
 }) => {
-  const [code, setCode] = useState(initialCode);
+  const [code, setCode] = useState(() => normalizeLatexSource(initialCode));
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    setCode(initialCode);
+    setCode(normalizeLatexSource(initialCode));
   }, [initialCode]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText(normalizeLatexSource(code));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // The preview wraps bare LaTeX in display-math delimiters; if the code
-  // already contains `$`, it's assumed to carry its own delimiters.
-  const previewSource = code.length > 0 && !code.includes('$') ? `$$${code}$$` : code;
+  const handleCodeChange = (value: string) => {
+    setCode(normalizeLatexSource(value));
+  };
+
+  const previewSource = getLatexPreviewSource(code);
 
   return (
     <Box
@@ -113,7 +116,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
           >
             <Editor
               value={code}
-              onValueChange={setCode}
+              onValueChange={handleCodeChange}
               highlight={(value) => hljs.highlight(value, { language: 'latex' }).value}
               padding={10}
               style={{
