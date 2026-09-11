@@ -1,254 +1,76 @@
-"use client";
-
-import React, { useCallback, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Latex from "react-latex-next";
-import { useDropzone } from "react-dropzone";
 import { EB_Garamond } from "next/font/google";
-import { motion } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { setPendingImage } from "./utils/pendingImage";
-import { faqs } from "./utils/faqs";
+import HeroDropzone from "./components/HeroDropzone";
 import StructuredData from "./components/StructuredData";
+import { faqs } from "./utils/faqs";
+import styles from "./landing.module.css";
 
 const serif = EB_Garamond({
   subsets: ["latin"],
   style: ["normal", "italic"],
   weight: ["400", "500"],
+  variable: "--landing-serif",
 });
 
 const steps = [
-  {
-    title: "Upload or paste",
-    body: "Drag in a screenshot, photo, or scan of any equation — or paste straight from your clipboard.",
-  },
-  {
-    title: "We read the math",
-    body: "An AI model trained on scientific notation transcribes the image into precise LaTeX.",
-  },
-  {
-    title: "Copy the code",
-    body: "Get clean, editable LaTeX ready to drop into your paper, thesis, or notes.",
-  },
+  { title: "Capture the equation.", text: "A screenshot from a paper. A photo of your notes. A scan of the whiteboard. Start with a clear image of the math." },
+  { title: "Let us do the typing.", text: "AI-powered recognition turns mathematical notation into editable LaTeX. Fractions, integrals, matrices and all." },
+  { title: "Make it yours.", text: "Check the result, edit what you need, and copy the code into Overleaf, your paper or your notes." },
 ];
-
 
 export default function LandingPage() {
   return (
-    <div className={serif.className} style={{ color: "var(--primary-text)" }}>
-      {/* ---------- Hero ---------- */}
-      <section className="min-h-[90vh] flex flex-col items-center justify-center px-6 text-center">
-        <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-          className="flex flex-col items-center max-w-3xl"
-        >
-          <h1
-            className="leading-[1.05] tracking-tight"
-            style={{ fontSize: "clamp(2.75rem, 8vw, 5.5rem)" }}
-          >
-            Convert images to <Latex>{"$\\LaTeX$"}</Latex>.
-          </h1>
+    <div className={`${styles.landing} ${serif.variable}`}>
+      <header className={styles.header}>
+        <Link href="/" className={styles.wordmark} aria-label="Img2LaTeX home">img<span>2</span>latex<span className={styles.wordmarkDot}>.</span></Link>
+        <nav aria-label="Main navigation">
+          <a href="#how-it-works">How it works</a>
+          <Link href="/about">About</Link>
+          <a href="https://github.com/rafaelha/img2latex" className={styles.sourceLink}>Open source <span aria-hidden="true">↗</span></a>
+        </nav>
+      </header>
 
-          <p
-            className="mt-6"
-            style={{ fontSize: "clamp(1.25rem, 3vw, 1.85rem)", opacity: 0.7 }}
-          >
-            From scientists for{" "}
-            <em style={{ fontStyle: "italic" }}>everyone</em>. Always free.
-          </p>
-
+      <section className={styles.hero} aria-labelledby="hero-title">
+        <div className={styles.heroCopy}>
+          <p className={styles.eyebrow}><span aria-hidden="true">[ 01 — ∞ ]</span> A small tool for big ideas</p>
+          <h1 id="hero-title">Your math.<br /><em>Beautifully</em><br />translated<span className={styles.period}>.</span></h1>
+          <p className={styles.intro}>From image to LaTeX, without the retyping. Turn screenshots, scans and handwritten equations into code you can work with.</p>
+          <div className={styles.heroFootnote}><span className={styles.asterisk} aria-hidden="true">∗</span><p>Made by researchers.<br />Free for everyone. No account needed.</p></div>
+        </div>
+        <div className={styles.workspace}>
+          <div className={styles.workspaceHeading}><span>IMAGE → LaTeX</span><span>Less typing. More thinking.</span></div>
           <HeroDropzone />
-
-          <Link
-            href="/convert"
-            className="mt-8 text-sm sm:text-base border-b pb-0.5 transition-opacity duration-200 hover:opacity-60"
-            style={{ borderColor: "var(--primary-text)", opacity: 0.6 }}
-          >
-            Open the image to LaTeX converter &rarr;
-          </Link>
-        </motion.div>
-      </section>
-
-      {/* ---------- What it is (SEO intro) ---------- */}
-      <Section>
-        <h2 className="text-center" style={headingStyle}>
-          Image to LaTeX, instantly
-        </h2>
-        <p
-          className="mt-8 mx-auto text-center"
-          style={{
-            fontSize: "clamp(1.1rem, 2.4vw, 1.4rem)",
-            lineHeight: 1.7,
-            opacity: 0.8,
-            maxWidth: "44rem",
-          }}
-        >
-          Img2LaTeX is a free LaTeX OCR tool that converts images of
-          mathematical equations into clean, editable LaTeX code. Paste a
-          screenshot from a paper, snap a photo of handwritten notes, or drop in
-          a scan — and get accurate LaTeX in seconds. Built by researchers for
-          everyone.
-        </p>
-      </Section>
-
-      {/* ---------- How it works ---------- */}
-      <Section>
-        <h2 className="text-center" style={headingStyle}>
-          How it works
-        </h2>
-        <ol className="mt-14 mx-auto max-w-3xl grid gap-12 sm:grid-cols-3">
-          {steps.map((step, i) => (
-            <li key={step.title} className="text-center">
-              <div
-                style={{ fontSize: "2.5rem", opacity: 0.4, fontStyle: "italic" }}
-              >
-                {i + 1}
-              </div>
-              <h3 className="mt-3 text-xl sm:text-2xl">{step.title}</h3>
-              <p
-                className="mt-3 text-base"
-                style={{ lineHeight: 1.65, opacity: 0.7 }}
-              >
-                {step.body}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </Section>
-
-      {/* ---------- FAQ (SEO) ---------- */}
-      <Section>
-        <h2 className="text-center" style={headingStyle}>
-          Questions
-        </h2>
-        <dl className="mt-14 mx-auto max-w-2xl flex flex-col gap-10">
-          {faqs.map((faq) => (
-            <div key={faq.q}>
-              <dt className="text-xl sm:text-2xl">{faq.q}</dt>
-              <dd
-                className="mt-2 text-base"
-                style={{ lineHeight: 1.7, opacity: 0.7 }}
-              >
-                {faq.a}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </Section>
-
-      {/* ---------- Closing CTA ---------- */}
-      <section className="px-6 py-28 text-center">
-        <h2 style={headingStyle}>
-          Always free. For <em style={{ fontStyle: "italic" }}>everyone</em>.
-        </h2>
-        <div className="mt-10">
-          <Link
-            href="/convert"
-            className="text-lg sm:text-xl border-b pb-1 transition-opacity duration-200 hover:opacity-60"
-            style={{ borderColor: "var(--primary-text)" }}
-          >
-            Convert an image &rarr;
-          </Link>
+          <Link href="/convert" className={styles.converterLink}>Open the equation editor <span aria-hidden="true">↗</span></Link>
+          <div className={styles.specimen}>
+            <div className={styles.specimenHeading}><span>A little example</span><span aria-hidden="true">↙</span></div>
+            <div className={styles.equation} aria-label="Euler's identity: e to the i pi plus one equals zero">e<sup>iπ</sup> + 1 = 0</div>
+            <div className={styles.codeExample}><span>LaTeX</span><code>{"e^{i\\pi} + 1 = 0"}</code></div>
+          </div>
+          <p className={styles.caption}>The same idea. A more useful form.</p>
         </div>
       </section>
 
+      <section className={styles.process} id="how-it-works" aria-labelledby="process-title">
+        <div className={styles.sectionHeading}><p className={styles.eyebrow}>01 / The process</p><h2 id="process-title">From a quick capture<br />to a <em>clean equation.</em></h2><p>Three small steps between<br />“I need this” and “it’s in my paper.”</p></div>
+        <ol className={styles.steps}>{steps.map((step, i) => <li key={step.title}><span className={styles.stepNumber}>0{i + 1}<span aria-hidden="true">{["↗", "∑", "✓"][i]}</span></span><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol>
+      </section>
+
+      <section className={styles.questions} aria-labelledby="faq-title">
+        <div><p className={styles.eyebrow}>02 / A few answers</p><h2 id="faq-title">Glad you<br /><em>asked.</em><span className={styles.questionMark} aria-hidden="true">?</span></h2><p className={styles.faqIntro}>A little more about the tool,<br />before you put it to work.</p></div>
+        <dl className={styles.faqList}>{faqs.map((faq, i) => <div key={faq.q}><dt><span>0{i + 1}</span>{faq.q}</dt><dd>{faq.a}</dd></div>)}</dl>
+      </section>
+
+      <section className={styles.closing}>
+        <p className={styles.eyebrow}>Keep your train of thought.</p>
+        <h2>You bring the ideas.<br />We’ll bring the <em>LaTeX.</em></h2>
+        <Link href="/convert">Convert an equation <span aria-hidden="true">↗</span></Link>
+        <p>Free. Open source. Made for curious minds.</p>
+      </section>
       <StructuredData />
       <Analytics />
       <SpeedInsights />
     </div>
-  );
-}
-
-const headingStyle: React.CSSProperties = {
-  fontSize: "clamp(1.85rem, 4.5vw, 2.75rem)",
-  lineHeight: 1.15,
-  letterSpacing: "-0.01em",
-};
-
-function HeroDropzone() {
-  const router = useRouter();
-
-  const forward = useCallback(
-    (file: File) => {
-      setPendingImage(file);
-      router.push("/convert");
-    },
-    [router]
-  );
-
-  const onDrop = useCallback(
-    (files: File[]) => {
-      if (files[0]) forward(files[0]);
-    },
-    [forward]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { "image/*": [] },
-    multiple: false,
-  });
-
-  // Paste an image anywhere on the landing page (Ctrl/Cmd+V).
-  useEffect(() => {
-    const onPaste = (event: ClipboardEvent) => {
-      const items = Array.from(event.clipboardData?.items || []);
-      for (const item of items) {
-        if (item.type.startsWith("image")) {
-          const file = item.getAsFile();
-          if (file) {
-            event.preventDefault();
-            forward(file);
-            return;
-          }
-        }
-      }
-    };
-    window.addEventListener("paste", onPaste);
-    return () => window.removeEventListener("paste", onPaste);
-  }, [forward]);
-
-  return (
-    <div
-      {...getRootProps()}
-      className="mt-12 w-full max-w-xl cursor-pointer rounded-lg border border-dashed px-8 py-10 text-center transition-opacity duration-200 hover:opacity-70"
-      style={{
-        borderColor: "var(--primary-text)",
-        opacity: isDragActive ? 0.7 : 1,
-      }}
-    >
-      <input {...getInputProps()} />
-      <p className="text-lg sm:text-xl">
-        {isDragActive
-          ? "Drop to convert"
-          : "Drop an image, click to upload, or paste"}
-      </p>
-      <p className="mt-2 text-sm" style={{ opacity: 0.5 }}>
-        PNG, JPEG, GIF, or WebP
-      </p>
-    </div>
-  );
-}
-
-function Section({ children }: { children: React.ReactNode }) {
-  return (
-    <section
-      className="px-6 py-24 border-t"
-      style={{ borderColor: "var(--border-color)" }}
-    >
-      <motion.div
-        initial={false}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        className="mx-auto max-w-5xl"
-      >
-        {children}
-      </motion.div>
-    </section>
   );
 }
