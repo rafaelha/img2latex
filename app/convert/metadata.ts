@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "Convert Equation Images to LaTeX | Free Online Tool",
     description:
       "Transform photos of mathematical equations into perfect LaTeX code instantly. No signup required.",
-    url: "https://img2latex.xyz/convert",
+    url: "https://www.img2latex.xyz/convert",
     images: [
       {
         url: "/logo.png",

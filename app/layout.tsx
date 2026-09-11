@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import StructuredData from "./components/StructuredData";
 import Link from "next/link";
 import "katex/dist/katex.min.css";
 
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Img2LaTeX" }],
   creator: "Img2LaTeX",
   publisher: "Img2LaTeX",
-  metadataBase: new URL("https://img2latex.xyz"),
+  metadataBase: new URL("https://www.img2latex.xyz"),
   alternates: {
     canonical: "/",
   },
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
     description:
       "Convert images of LaTeX equations to editable LaTeX code using AI-powered image recognition. Free, instant and accurate.",
     type: "website",
-    url: "https://img2latex.xyz",
+    url: "https://www.img2latex.xyz",
     siteName: "Img2LaTeX",
     locale: "en_US",
     images: [
@@ -128,7 +127,6 @@ export default function RootLayout({
             </Link>
           </div>
         </footer>
-        <StructuredData />
       </body>
     </html>
   );
