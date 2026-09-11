@@ -10,6 +10,8 @@ import { motion } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { setPendingImage } from "./utils/pendingImage";
+import { faqs } from "./utils/faqs";
+import StructuredData from "./components/StructuredData";
 
 const serif = EB_Garamond({
   subsets: ["latin"],
@@ -32,24 +34,6 @@ const steps = [
   },
 ];
 
-const faqs = [
-  {
-    q: "What is Img2LaTeX?",
-    a: "Img2LaTeX is a free online tool that converts images of mathematical equations into editable LaTeX code using AI-powered OCR. Upload a screenshot, photo, or scan and get clean LaTeX in seconds.",
-  },
-  {
-    q: "Is it really free?",
-    a: "Yes. Img2LaTeX is completely free, with no account, no subscription, and no limits on how many equations you convert.",
-  },
-  {
-    q: "What kinds of images work?",
-    a: "Screenshots from papers and slides, photos of handwritten notes, scans, and clipboard pastes all work. The tool focuses on the equation and ignores surrounding text.",
-  },
-  {
-    q: "What can I do with the output?",
-    a: "The generated LaTeX drops directly into documents, theses, presentations, Overleaf projects, and notes — anywhere LaTeX is supported.",
-  },
-];
 
 export default function LandingPage() {
   return (
@@ -57,7 +41,7 @@ export default function LandingPage() {
       {/* ---------- Hero ---------- */}
       <section className="min-h-[90vh] flex flex-col items-center justify-center px-6 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
           className="flex flex-col items-center max-w-3xl"
@@ -84,7 +68,7 @@ export default function LandingPage() {
             className="mt-8 text-sm sm:text-base border-b pb-0.5 transition-opacity duration-200 hover:opacity-60"
             style={{ borderColor: "var(--primary-text)", opacity: 0.6 }}
           >
-            Or click here &rarr;
+            Open the image to LaTeX converter &rarr;
           </Link>
         </motion.div>
       </section>
@@ -172,6 +156,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <StructuredData />
       <Analytics />
       <SpeedInsights />
     </div>
@@ -256,7 +241,7 @@ function Section({ children }: { children: React.ReactNode }) {
       style={{ borderColor: "var(--border-color)" }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 18 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7, ease: "easeOut" }}

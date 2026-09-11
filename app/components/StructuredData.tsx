@@ -1,4 +1,5 @@
 import React from "react";
+import { faqs } from "../utils/faqs";
 
 const StructuredData: React.FC = () => {
   const structuredData = {
@@ -7,7 +8,7 @@ const StructuredData: React.FC = () => {
     name: "Img2LaTeX - LaTeX Image to Code Converter",
     description:
       "Free online tool to convert images of mathematical equations to editable LaTeX code using AI-powered image recognition.",
-    url: "https://img2latex.xyz",
+    url: "https://www.img2latex.xyz",
     applicationCategory: "UtilityApplication",
     operatingSystem: "All",
     offers: {
@@ -21,77 +22,42 @@ const StructuredData: React.FC = () => {
       "Support for complex mathematical notations",
       "Free LaTeX OCR tool with no usage limitations",
     ],
-    screenshot: "https://img2latex.xyz/logo.png",
-    logo: "https://img2latex.xyz/logo.png",
+    logo: "https://www.img2latex.xyz/logo.png",
     softwareVersion: "1.0",
     author: {
       "@type": "Organization",
       name: "Img2LaTeX",
-      url: "https://img2latex.xyz",
+      url: "https://www.img2latex.xyz",
     },
     publisher: {
       "@type": "Organization",
       name: "Img2LaTeX",
-      url: "https://img2latex.xyz",
+      url: "https://www.img2latex.xyz",
     },
   };
 
   const faqStructuredData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "How do I convert an image to LaTeX?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Simply upload or paste your equation image and our AI will instantly convert it to editable LaTeX code.",
-        },
+    mainEntity: faqs.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
       },
-      {
-        "@type": "Question",
-        name: "Is Img2LaTeX free to use?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, Img2LaTeX is completely free with no usage limitations or subscriptions required.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What types of equations can be converted?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Our tool can handle a wide range of mathematical notations including fractions, integrals, matrices, Greek symbols, and complex expressions.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How accurate is the LaTeX OCR conversion?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Our AI-powered LaTeX OCR system provides high accuracy for most equation images, especially those with clear visibility. The optical character recognition technology is specifically optimized for mathematical notation.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What is LaTeX OCR?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "LaTeX OCR (Optical Character Recognition) is a technology that automatically recognizes and converts mathematical equations from images into editable LaTeX code format, eliminating the need for manual transcription.",
-        },
-      },
-    ],
+    })),
   };
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData).replace(/</g, "\\u003c") }}
       />
     </>
   );

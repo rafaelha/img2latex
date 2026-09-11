@@ -21,7 +21,7 @@ export default function About() {
     >
       <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
           className="flex flex-col items-center max-w-2xl"

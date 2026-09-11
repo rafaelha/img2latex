@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /_next/
 
-Sitemap: https://img2latex.xyz/sitemap.xml
+Sitemap: https://www.img2latex.xyz/sitemap.xml
